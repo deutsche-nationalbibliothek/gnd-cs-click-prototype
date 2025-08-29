@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neue Entität anlegen - GND Community Space</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: #2c5aa0;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-left: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-breadcrumb a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2c5aa0;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+
+        .btn-outline:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            color: #2c5aa0;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .type-selection {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .type-selection h3 {
+            color: #2c5aa0;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .type-card {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .type-card:hover {
+            border-color: #2c5aa0;
+            background: #e6f3ff;
+        }
+
+        .type-card.selected {
+            border-color: #2c5aa0;
+            background: #e6f3ff;
+        }
+
+        .type-icon {
+            width: 50px;
+            height: 50px;
+            background: #2c5aa0;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin: 0 auto 1rem auto;
+        }
+
+        .type-card h4 {
+            color: #2c5aa0;
+            margin-bottom: 0.5rem;
+        }
+
+        .type-card p {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .entity-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .entity-form.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h4 {
+            color: #2c5aa0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-help {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .form-actions {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .progress-indicator {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .progress-indicator.active {
+            display: block;
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .progress-step.active {
+            color: #2c5aa0;
+            font-weight: bold;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .progress-step.active .step-number {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .add-field-btn {
+            background: #f8f9fa;
+            color: #2c5aa0;
+            border: 2px dashed #2c5aa0;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .add-field-btn:hover {
+            background: #e6f3ff;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .type-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">GND</div>
+                <h1>Community Space</h1>
+                <div class="nav-breadcrumb">
+                    <a href="#" onclick="goToDashboard()">Dashboard</a>
+                    <span>›</span>
+                    <span>Neue Entität anlegen</span>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">MS</div>
+                    <span>Maria Schmidt</span>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="page-header">
+            <h2>Neue Entität anlegen</h2>
+            <p>Schlagen Sie eine neue Entität für die GND vor. Wählen Sie zunächst den passenden Entitätstyp aus.</p>
+        </section>
+
+        <section class="progress-indicator" id="progressIndicator">
+            <div class="progress-steps">
+                <div class="progress-step active">
+                    <div class="step-number">1</div>
+                    <span>Typ auswählen</span>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="step-number">2</div>
+                    <span>Daten eingeben</span>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="step-number">3</div>
+                    <span>Überprüfen</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="type-selection" id="typeSelection">
+            <h3>Wählen Sie den Entitätstyp:</h3>
+            <div class="type-grid">
+                <div class="type-card" data-type="person" onclick="selectType('person')">
+                    <div class="type-icon">👤</div>
+                    <h4>Person/Familie</h4>
+                    <p>Individuelle Personen oder Familien</p>
+                </div>
+                
+                <div class="type-card" data-type="organisation" onclick="selectType('organisation')">
+                    <div class="type-icon">🏢</div>
+                    <h4>Organisation</h4>
+                    <p>Institutionen, Vereine, Unternehmen</p>
+                </div>
+                
+                <div class="type-card" data-type="veranstaltung" onclick="selectType('veranstaltung')">
+                    <div class="type-icon">📅</div>
+                    <h4>Veranstaltung</h4>
+                    <p>Konferenzen, Messen, Kongresse</p>
+                </div>
+                
+                <div class="type-card" data-type="werk" onclick="selectType('werk')">
+                    <div class="type-icon">📖</div>
+                    <h4>Werk</h4>
+                    <p>Bücher, Filme, Kunstwerke</p>
+                </div>
+                
+                <div class="type-card" data-type="geografikum" onclick="selectType('geografikum')">
+                    <div class="type-icon">🌍</div>
+                    <h4>Geografikum</h4>
+                    <p>Orte, Länder, geografische Regionen</p>
+                </div>
+                
+                <div class="type-card" data-type="allgemeinbegriff" onclick="selectType('allgemeinbegriff')">
+                    <div class="type-icon">💡</div>
+                    <h4>Allgemeinbegriff</h4>
+                    <p>Themen, Konzepte, Sachbegriffe</p>
+                </div>
+                
+                <div class="type-card" data-type="bauwerk" onclick="selectType('bauwerk')">
+                    <div class="type-icon">🏛️</div>
+                    <h4>Bauwerk</h4>
+                    <p>Gebäude, Denkmäler, Brücken</p>
+                </div>
+                
+                <div class="type-card" data-type="beruf" onclick="selectType('beruf')">
+                    <div class="type-icon">⚒️</div>
+                    <h4>Beruf</h4>
+                    <p>Berufsbezeichnungen, Tätigkeiten</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Person/Familie Formular -->
+        <form class="entity-form" id="form-person">
+            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Person/Familie - Daten eingeben</h3>
+            
+            <div class="form-section">
+                <h4>Grunddaten</h4>
+                <div class="form-group">
+                    <label for="person-name">Bevorzugter Name <span class="required">*</span></label>
+                    <input type="text" id="person-name" name="person-name" required 
+                           placeholder="z.B. Schmidt, Maria">
+                    <div class="form-help">Format: Nachname, Vorname</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="person-birth">Geburtsjahr</label>
+                        <input type="text" id="person-birth" name="person-birth" 
+                               placeholder="z.B. 1975 oder 1975-1980">
+                    </div>
+                    <div class="form-group">
+                        <label for="person-death">Sterbejahr</label>
+                        <input type="text" id="person-death" name="person-death" 
+                               placeholder="z.B. 2020 oder noch lebend">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="person-profession">Beruf/Tätigkeit</label>
+                    <input type="text" id="person-profession" name="person-profession" 
+                           placeholder="z.B. Bibliothekarin, Forscherin">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>Zusätzliche Informationen</h4>
+                <div class="form-group">
+                    <label for="person-bio">Biografische Angaben</label>
+                    <textarea id="person-bio" name="person-bio" 
+                              placeholder="Kurze biografische Informationen..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="person-sources">Quellen und Belege</label>
+                    <textarea id="person-sources" name="person-sources" 
+                              placeholder="Literatur, Webseiten, andere Quellen..."></textarea>
+                </div>
+            </div>
+        </form>
+
+        <!-- Organisation Formular -->
+        <form class="entity-form" id="form-organisation">
+            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Organisation - Daten eingeben</h3>
+            
+            <div class="form-section">
+                <h4>Grunddaten</h4>
+                <div class="form-group">
+                    <label for="org-name">Name der Organisation <span class="required">*</span></label>
+                    <input type="text" id="org-name" name="org-name" required 
+                           placeholder="z.B. Deutsche Nationalbibliothek">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="org-founded">Gründungsjahr</label>
+                        <input type="text" id="org-founded" name="org-founded" 
+                               placeholder="z.B. 1912">
+                    </div>
+                    <div class="form-group">
+                        <label for="org-dissolved">Auflösungsjahr</label>
+                        <input type="text" id="org-dissolved" name="org-dissolved" 
+                               placeholder="falls aufgelöst">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="org-type">Organisationstyp</label>
+                    <select id="org-type" name="org-type">
+                        <option value="">Bitte wählen...</option>
+                        <option value="bibliothek">Bibliothek</option>
+                        <option value="universität">Universität</option>
+                        <option value="forschungseinrichtung">Forschungseinrichtung</option>
+                        <option value="verein">Verein</option>
+                        <option value="unternehmen">Unternehmen</option>
+                        <option value="behörde">Behörde</option>
+                        <option value="sonstiges">Sonstiges</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="org-location">Ort/Sitz</label>
+                    <input type="text" id="org-location" name="org-location" 
+                           placeholder="z.B. Leipzig, Deutschland">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>Zusätzliche Informationen</h4>
+                <div class="form-group">
+                    <label for="org-description">Beschreibung</label>
+                    <textarea id="org-description" name="org-description" 
+                              placeholder="Kurze Beschreibung der Organisation..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="org-sources">Quellen und Belege</label>
+                    <textarea id="org-sources" name="org-sources" 
+                              placeholder="Literatur, Webseiten, andere Quellen..."></textarea>
+                </div>
+            </div>
+        </form>
+
+        <!-- Veranstaltung Formular -->
+        <form class="entity-form" id="form-veranstaltung">
+            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Veranstaltung - Daten eingeben</h3>
+            
+            <div class="form-section">
+                <h4>Grunddaten</h4>
+                <div class="form-group">
+                    <label for="event-name">Name der Veranstaltung <span class="required">*</span></label>
+                    <input type="text" id="event-name" name="event-name" required 
+                           placeholder="z.B. Bibliothekartag 2024">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-start">Beginn</label>
+                        <input type="date" id="event-start" name="event-start">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-end">Ende</label>
+                        <input type="date" id="event-end" name="event-end">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event-location">Veranstaltungsort</label>
+                    <input type="text" id="event-location" name="event-location" 
+                           placeholder="z.B. Hamburg, Deutschland">
+                </div>
+                
+                <div class="form-group">
+                    <label for="event-organizer">Veranstalter</label>
+                    <input type="text" id="event-organizer" name="event-organizer" 
+                           placeholder="z.B. VDB - Verein Deutscher Bibliothekare">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>Zusätzliche Informationen</h4>
+                <div class="form-group">
+                    <label for="event-description">Beschreibung</label>
+                    <textarea id="event-description" name="event-description" 
+                              placeholder="Kurze Beschreibung der Veranstaltung..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event-sources">Quellen und Belege</label>
+                    <textarea id="event-sources" name="event-sources" 
+                              placeholder="Webseiten, Programme, andere Quellen..."></textarea>
+                </div>
+            </div>
+        </form>
+
+        <!-- Werk Formular -->
+        <form class="entity-form" id="form-werk">
+            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Werk - Daten eingeben</h3>
+            
+            <div class="form-section">
+                <h4>Grunddaten</h4>
+                <div class="form-group">
+                    <label for="work-title">Titel <span class="required">*</span></label>
+                    <input type="text" id="work-title" name="work-title" required 
+                           placeholder="z.B. Faust. Eine Tragödie">
+                </div>
+                
+                <div class="form-group">
+                    <label for="work-author">Autor/Urheber</label>
+                    <input type="text" id="work-author" name="work-author" 
+                           placeholder="z.B. Goethe, Johann Wolfgang von">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="work-type">Werktyp</label>
+                        <select id="work-type" name="work-type">
+                            <option value="">Bitte wählen...</option>
+                            <option value="buch">Buch</option>
+                            <option value="artikel">Artikel</option>
+                            <option value="film">Film</option>
+                            <option value="musik">Musikwerk</option>
+                            <option value="kunstwerk">Kunstwerk</option>
+                            <option value="software">Software</option>
+                            <option value="sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="work-year">Erscheinungs-/Entstehungsjahr</label>
+                        <input type="text" id="work-year" name="work-year" 
+                               placeholder="z.B. 1808">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="work-publisher">Verlag/Herausgeber</label>
+                    <input type="text" id="work-publisher" name="work-publisher" 
+                           placeholder="z.B. Cotta'sche Buchhandlung">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>Zusätzliche Informationen</h4>
+                <div class="form-group">
+                    <label for="work-description">Inhaltsbeschreibung</label>
+                    <textarea id="work-description" name="work-description" 
+                              placeholder="Kurze Beschreibung des Werks..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="work-isbn">ISBN/ISSN/DOI</label>
+                    <input type="text" id="work-isbn" name="work-isbn" 
+                           placeholder="z.B. 978-3-16-148410-0">
+                </div>
+                
+                <div class="form-group">
+                    <label for="work-sources">Quellen und Belege</label>
+                    <textarea id="work-sources" name="work-sources" 
+                              placeholder="Kataloge, Bibliografien, andere Quellen..."></textarea>
+                </div>
+            </div>
+        </form>
+
+        <!-- Weitere Formulare für andere Typen würden hier folgen -->
+        
+        <div class="form-actions" id="formActions" style="display: none;">
+            <button type="button" class="btn btn-back" onclick="goBackToSelection()">Zurück zur Auswahl</button>
+            <button type="button" class="btn btn-outline" onclick="saveDraft()">Als Entwurf speichern</button>
+            <button type="button" class="btn btn-primary" onclick="submitEntity()">Entität vorschlagen</button>
+        </div>
+    </main>
+
+    <script>
+        let selectedType = null;
+
+        function selectType(type) {
+            selectedType = type;
+            
+            // Entferne 'selected' Klasse von allen Karten
+            document.querySelectorAll('.type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Füge 'selected' Klasse zur gewählten Karte hinzu
+            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+            
+            // Zeige entsprechendes Formular nach kurzer Verzögerung
+            setTimeout(() => {
+                showForm(type);
+            }, 300);
+        }
+
+        function showForm(type) {
+            // Verstecke Typ-Auswahl
+            document.getElementById('typeSelection').style.display = 'none';
+            
+            // Zeige Progress Indicator
+            document.getElementById('progressIndicator').classList.add('active');
+            document.getElementById('step2').classList.add('active');
+            
+            // Verstecke alle Formulare
+            document.querySelectorAll('.entity-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Zeige entsprechendes Formular
+            const targetForm = document.getElementById(`form-${type}`);
+            if (targetForm) {
+                targetForm.classList.add('active');
+            } else {
+                // Fallback für noch nicht implementierte Formulare
+                alert(`Formular für ${type} ist noch in Entwicklung.`);
+                goBackToSelection();
+                return;
+            }
+            
+            // Zeige Form-Aktionen
+            document.getElementById('formActions').style.display = 'flex';
+        }
+
+        function goBackToSelection() {
+            // Zeige Typ-Auswahl wieder
+            document.getElementById('typeSelection').style.display = 'block';
+            
+            // Verstecke Progress Indicator
+            document.getElementById('progressIndicator').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            
+            // Verstecke alle Formulare
+            document.querySelectorAll('.entity-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Verstecke Form-Aktionen
+            document.getElementById('formActions').style.display = 'none';
+            
+            // Entferne Auswahl
+            document.querySelectorAll('.type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            selectedType = null;
+        }
+
+        function saveDraft() {
+            if (!selectedType) return;
+            
+            alert(`Entwurf für ${selectedType} wurde gespeichert. Sie können ihn später aus dem Dashboard heraus bearbeiten.`);
+        }
+
+        function submitEntity() {
+            if (!selectedType) return;
+            
+            // Validierung würde hier stattfinden
+            const form = document.querySelector('.entity-form.active');
+            const requiredFields = form.querySelectorAll('[required]');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    valid = false;
+                } else {
+                    field.style.borderColor = '#e9ecef';
+                }
+            });
+            
+            if (!valid) {
+                alert('Bitte füllen Sie alle Pflichtfelder aus.');
+                return;
+            }
+            
+            // Simuliere Einreichung
+            document.getElementById('step3').classList.add('active');
+            alert(`Ihre ${selectedType}-Entität wurde erfolgreich eingereicht und wird nun von der Community geprüft. Sie erhalten eine Benachrichtigung über den Status.`);
+            
+            // Weiterleitung zum Dashboard
+            setTimeout(() => {
+                goToDashboard();
+            }, 2000);
+        }
+
+        function goToDashboard() {
+            alert('Weiterleitung zum Dashboard würde hier erfolgen.');
+            // window.location.href = 'dashboard.html';
+        }
+
+        function logout() {
+            if (confirm('Möchten Sie sich wirklich abmelden? Ungespeicherte Änderungen gehen verloren.')) {
+                alert('Abmeldung erfolgreich.');
+                // window.location.href = 'index.html';
+            }
+        }
+
+        // Auto-Save Funktionalität für Entwürfe
+        let autoSaveTimeout;
+        
+        document.addEventListener('input', function(e) {
+            if (e.target.closest('.entity-form')) {
+                clearTimeout(autoSaveTimeout);
+                autoSaveTimeout = setTimeout(() => {
+                    console.log('Auto-Save: Entwurf gespeichert');
+                    // Hier würde automatisches Speichern implementiert werden
+                }, 30000); // Speichere nach 30 Sekunden Inaktivität
+            }
+        });
+    </script>
+</body>
+</html>
