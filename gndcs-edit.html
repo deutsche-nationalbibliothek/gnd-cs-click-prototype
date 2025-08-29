@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entität ergänzen & korrigieren - GND Community Space</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: #2c5aa0;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-left: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c5aa0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-section a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-breadcrumb a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2c5aa0;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+
+        .btn-outline:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            min-width: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-explorer {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-explorer:hover {
+            background: #138496;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            color: #2c5aa0;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-section h3 {
+            color: #2c5aa0;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .entity-display {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .entity-display.active {
+            display: block;
+        }
+
+        .entity-header {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .entity-type {
+            display: inline-block;
+            background: #2c5aa0;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-description {
+            color: #666;
+            font-style: italic;
+        }
+
+        .edit-sections {
+            padding: 2rem;
+        }
+
+        .edit-section {
+            margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-header:hover {
+            background: #e9ecef;
+        }
+
+        .section-title {
+            color: #2c5aa0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: #2c5aa0;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+            background: white;
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .data-preview {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .addon-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .addon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .addon-title {
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+
+        .addon-items {
+            margin-left: 1rem;
+        }
+
+        .addon-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .addon-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .no-data {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="gndcs-dashboard.html">
+                    <div class="logo">GND</div>
+                </a>
+                <h1>Community Space</h1>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">MS</div>
+                    <span>Maria Schmidt</span>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-content">
+            <div class="nav-breadcrumb">
+                <a href="#" onclick="goToDashboard()">Dashboard</a>
+                <span>›</span>
+                <span>Entität ergänzen & korrigieren</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-container">
+        <section class="page-header">
+            <h2>Entität ergänzen & korrigieren</h2>
+            <p>Verbessern Sie bestehende GND-Entitäten durch Korrekturen und Ergänzungen oder fügen Sie Zusatzinformationen hinzu.</p>
+        </section>
+
+        <section class="search-section">
+            <h3>Entität laden</h3>
+            <div class="search-input-group">
+                <div class="input-group">
+                    <label for="gnd-number">GND-Nummer oder GNDcs-Nummer</label>
+                    <input type="text" id="gnd-number" name="gnd-number" 
+                           placeholder="z.B. 124525741" 
+                           onkeypress="handleEnterKey(event)">
+                    <div class="help-text">
+                        Geben Sie die GND-Nummer (z.B. 124525741) oder GNDcs-Nummer ein.
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="loadEntity()">Laden</button>
+                <button class="btn btn-explorer" onclick="openGNDExplorer()">
+                    🔍 GND Explorer
+                </button>
+            </div>
+        </section>
+
+        <section class="entity-display" id="entityDisplay">
+            <div class="entity-header">
+                <div class="entity-type" id="entityType">Person (piz)</div>
+                <div class="entity-name" id="entityName">Bierling, Götz</div>
+                <div class="entity-description" id="entityDescription">Rechtsanwalt; Jurist</div>
+            </div>
+
+            <div class="edit-sections">
+                <div class="edit-section">
+                    <div class="section-header" onclick="toggleSection('gnd-data')">
+                        <div class="section-title">
+                            <div class="section-icon">📊</div>
+                            GND-Daten ergänzen/anpassen
+                        </div>
+                        <button class="btn btn-outline btn-icon" onclick="editGNDData(event)">
+                            ✎
+                        </button>
+                    </div>
+                    <div class="section-content" id="gnd-data">
+                        <div class="data-preview" id="gndDataPreview">
+                            <strong>Aktuelle GND-Daten:</strong><br>
+                            Name: Bierling, Götz<br>
+                            Beruf: Rechtsanwalt; Jurist<br>
+                            GND-ID: 124525741<br>
+                            Typ: Person (individualisiert)<br>
+                            Status: Aktiv
+                        </div>
+                        <p>Hier können Sie Korrekturen und Ergänzungen zu den offiziellen GND-Daten vorschlagen.</p>
+                    </div>
+                </div>
+
+                <div class="edit-section">
+                    <div class="section-header" onclick="toggleSection('addon-data')">
+                        <div class="section-title">
+                            <div class="section-icon">🔧</div>
+                            Zusatzinformationen ergänzen/anpassen
+                        </div>
+                        <span style="color: #666; font-size: 0.9rem;">Addons</span>
+                    </div>
+                    <div class="section-content" id="addon-data">
+                        <div class="addon-section">
+                            <div class="addon-header">
+                                <div class="addon-title">🌍 Geoinformationen</div>
+                                <button class="btn btn-outline btn-icon" onclick="addAddon('geo')" title="Neue Geoinformation hinzufügen">
+                                    +
+                                </button>
+                            </div>
+                            <div class="addon-items" id="geo-items">
+                                <div class="addon-item">
+                                    <span>Geburtsort: Hamburg, Deutschland (53.5511, 9.9937)</span>
+                                    <button class="btn btn-outline btn-icon" onclick="editAddon('geo', 1)">
+                                        ✎
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="addon-section">
+                            <div class="addon-header">
+                                <div class="addon-title">🔗 Zusätzliche Identifier</div>
+                                <button class="btn btn-outline btn-icon" onclick="addAddon('identifier')" title="Neuen Identifier hinzufügen">
+                                    +
+                                </button>
+                            </div>
+                            <div class="addon-items" id="identifier-items">
+                                <div class="addon-item">
+                                    <span>ORCID: 0000-0002-1825-0097</span>
+                                    <button class="btn btn-outline btn-icon" onclick="editAddon('identifier', 1)">
+                                        ✎
+                                    </button>
+                                </div>
+                                <div class="addon-item">
+                                    <span>LinkedIn: linkedin.com/in/goetz-bierling</span>
+                                    <button class="btn btn-outline btn-icon" onclick="editAddon('identifier', 2)">
+                                        ✎
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="addon-section">
+                            <div class="addon-header">
+                                <div class="addon-title">📚 Sammlungen, Datenbanken und Kataloge</div>
+                                <button class="btn btn-outline btn-icon" onclick="addAddon('collections')" title="Neue Sammlung hinzufügen">
+                                    +
+                                </button>
+                            </div>
+                            <div class="addon-items" id="collection-items">
+                                <div class="no-data">Keine Einträge vorhanden</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentEntity = null;
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                loadEntity();
+            }
+        }
+
+        function loadEntity() {
+            const gndNumber = document.getElementById('gnd-number').value.trim();
+            
+            if (!gndNumber) {
+                alert('Bitte geben Sie eine GND-Nummer oder GNDcs-Nummer ein.');
+                return;
+            }
+
+            // Simuliere Laden der Entität
+            showLoading();
+            
+            setTimeout(() => {
+                if (gndNumber === '124525741') {
+                    // Beispieldaten für Götz Bierling
+                    loadExampleEntity();
+                } else {
+                    // Simuliere andere Entität oder Fehler
+                    simulateEntityLoad(gndNumber);
+                }
+            }, 1000);
+        }
+
+        function showLoading() {
+            const display = document.getElementById('entityDisplay');
+            display.classList.add('active');
+            display.innerHTML = '<div class="loading">Entität wird geladen...</div>';
+        }
+
+        function loadExampleEntity() {
+            currentEntity = {
+                id: '124525741',
+                type: 'Person (piz)',
+                name: 'Bierling, Götz',
+                description: 'Rechtsanwalt; Jurist'
+            };
+
+            document.getElementById('entityType').textContent = currentEntity.type;
+            document.getElementById('entityName').textContent = currentEntity.name;
+            document.getElementById('entityDescription').textContent = currentEntity.description;
+
+            // Restore the full entity display content
+            restoreEntityDisplay();
+        }
+
+        function simulateEntityLoad(gndNumber) {
+            // Simuliere verschiedene Entitäten oder Fehler
+            if (gndNumber.match(/^\d+$/)) {
+                currentEntity = {
+                    id: gndNumber,
+                    type: 'Organisation (kio)',
+                    name: 'Beispiel Organisation',
+                    description: 'Universitätsbibliothek; Forschungseinrichtung'
+                };
+
+                document.getElementById('entityType').textContent = currentEntity.type;
+                document.getElementById('entityName').textContent = currentEntity.name;
+                document.getElementById('entityDescription').textContent = currentEntity.description;
+
+                // Update GND data preview
+                document.getElementById('gndDataPreview').innerHTML = `
+                    <strong>Aktuelle GND-Daten:</strong><br>
+                    Name: ${currentEntity.name}<br>
+                    Beschreibung: ${currentEntity.description}<br>
+                    GND-ID: ${currentEntity.id}<br>
+                    Typ: ${currentEntity.type}<br>
+                    Status: Aktiv
+                `;
+
+                restoreEntityDisplay();
+            } else {
+                showError('Ungültige GND-Nummer. Bitte überprüfen Sie Ihre Eingabe.');
+            }
+        }
+
+        function restoreEntityDisplay() {
+            const display = document.getElementById('entityDisplay');
+            display.innerHTML = `
+                <div class="entity-header">
+                    <div class="entity-type">${currentEntity.type}</div>
+                    <div class="entity-name">${currentEntity.name}</div>
+                    <div class="entity-description">${currentEntity.description}</div>
+                </div>
+                <div class="edit-sections">
+                    <div class="edit-section">
+                        <div class="section-header" onclick="toggleSection('gnd-data')">
+                            <div class="section-title">
+                                <div class="section-icon">📊</div>
+                                GND-Daten ergänzen/anpassen
+                            </div>
+                            <button class="btn btn-outline btn-icon" onclick="editGNDData(event)">
+                                ✎
+                            </button>
+                        </div>
+                        <div class="section-content" id="gnd-data">
+                            <div class="data-preview">
+                                <strong>Aktuelle GND-Daten:</strong><br>
+                                Name: ${currentEntity.name}<br>
+                                Beschreibung: ${currentEntity.description}<br>
+                                GND-ID: ${currentEntity.id}<br>
+                                Typ: ${currentEntity.type}<br>
+                                Status: Aktiv
+                            </div>
+                            <p>Hier können Sie Korrekturen und Ergänzungen zu den offiziellen GND-Daten vorschlagen.</p>
+                        </div>
+                    </div>
+                    <div class="edit-section">
+                        <div class="section-header" onclick="toggleSection('addon-data')">
+                            <div class="section-title">
+                                <div class="section-icon">🔧</div>
+                                Zusatzinformationen ergänzen/anpassen
+                            </div>
+                            <span style="color: #666; font-size: 0.9rem;">Addons</span>
+                        </div>
+                        <div class="section-content" id="addon-data">
+                            <div class="addon-section">
+                                <div class="addon-header">
+                                    <div class="addon-title">🌍 Geoinformationen</div>
+                                    <button class="btn btn-outline btn-icon" onclick="addAddon('geo')" title="Neue Geoinformation hinzufügen">
+                                        +
+                                    </button>
+                                </div>
+                                <div class="addon-items">
+                                    <div class="addon-item">
+                                        <span>Geburtsort: Hamburg, Deutschland (53.5511, 9.9937)</span>
+                                        <button class="btn btn-outline btn-icon" onclick="editAddon('geo', 1)">
+                                            ✎
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="addon-section">
+                                <div class="addon-header">
+                                    <div class="addon-title">🔗 Zusätzliche Identifier</div>
+                                    <button class="btn btn-outline btn-icon" onclick="addAddon('identifier')" title="Neuen Identifier hinzufügen">
+                                        +
+                                    </button>
+                                </div>
+                                <div class="addon-items">
+                                    <div class="addon-item">
+                                        <span>ORCID: 0000-0002-1825-0097</span>
+                                        <button class="btn btn-outline btn-icon" onclick="editAddon('identifier', 1)">
+                                            ✎
+                                        </button>
+                                    </div>
+                                    <div class="addon-item">
+                                        <span>LinkedIn: linkedin.com/in/goetz-bierling</span>
+                                        <button class="btn btn-outline btn-icon" onclick="editAddon('identifier', 2)">
+                                            ✎
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="addon-section">
+                                <div class="addon-header">
+                                    <div class="addon-title">📚 Sammlungen, Datenbanken und Kataloge</div>
+                                    <button class="btn btn-outline btn-icon" onclick="addAddon('collections')" title="Neue Sammlung hinzufügen">
+                                        +
+                                    </button>
+                                </div>
+                                <div class="addon-items">
+                                    <div class="no-data">Keine Einträge vorhanden</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            display.classList.add('active');
+        }
+
+        function showError(message) {
+            const display = document.getElementById('entityDisplay');
+            display.innerHTML = `<div class="error">${message}</div>`;
+            display.classList.add('active');
+        }
+
+        function openGNDExplorer() {
+            window.open('https://explore.gnd.network', '_blank');
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            content.classList.toggle('active');
+        }
+
+        function editGNDData(event) {
+            event.stopPropagation();
+            if (!currentEntity) return;
+            
+            alert(`GND-Daten bearbeiten für: ${currentEntity.name}\nWeiterleitung zur Bearbeitungsseite würde hier erfolgen.`);
+        }
+
+        function addAddon(type) {
+            const typeNames = {
+                'geo': 'Geoinformation',
+                'identifier': 'Identifier', 
+                'collections': 'Sammlung/Katalog'
+            };
+            
+            alert(`Neue ${typeNames[type]} hinzufügen\nFormular würde hier geöffnet werden.`);
+        }
+
+        function editAddon(type, id) {
+            const typeNames = {
+                'geo': 'Geoinformation',
+                'identifier': 'Identifier',
+                'collections': 'Sammlung/Katalog'
+            };
+            
+            alert(`${typeNames[type]} bearbeiten (ID: ${id})\nBearbeitungsformular würde hier geöffnet werden.`);
+        }
+
+        function goToDashboard() {
+            window.location.href = 'gndcs-dashboard.html';
+        }
+
+        function logout() {
+            if (confirm('Möchten Sie sich wirklich abmelden?')) {
+                alert('Abmeldung erfolgreich. Sie werden zur Startseite weitergeleitet.');
+                window.location.href = 'gndcs-welcome.html';
+            }
+        }
+
+        // Automatisches Öffnen der Addon-Sektion beim Laden
+        document.addEventListener('DOMContentLoaded', function() {
+            // Beispiel: Öffne Addon-Sektion wenn Entität geladen ist
+        });
+    </script>
+</body>
+</html>
