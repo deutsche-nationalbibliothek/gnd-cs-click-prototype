@@ -55,6 +55,31 @@
             justify-content: center;
             font-weight: bold;
             color: #2c5aa0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-section a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         .nav-breadcrumb {
@@ -62,11 +87,11 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.9rem;
-            opacity: 0.8;
+            color: #666;
         }
 
         .nav-breadcrumb a {
-            color: white;
+            color: #2c5aa0;
             text-decoration: none;
         }
 
@@ -386,15 +411,15 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             .type-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-actions {
                 flex-direction: column;
             }
@@ -402,477 +427,483 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <div class="logo">GND</div>
+<header class="header">
+    <div class="header-content">
+                    <div class="logo-section">
+                <a href="gndcs-dashboard.html">
+                    <div class="logo">GND</div>
+                </a>
                 <h1>Community Space</h1>
-                <div class="nav-breadcrumb">
-                    <a href="#" onclick="goToDashboard()">Dashboard</a>
-                    <span>›</span>
-                    <span>Neue Entität anlegen</span>
-                </div>
             </div>
-            <div class="user-section">
-                <div class="user-info">
-                    <div class="user-avatar">MS</div>
-                    <span>Maria Schmidt</span>
-                </div>
-                <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-avatar">MS</div>
+                <span>Maria Schmidt</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+        </div>
+    </div>
+</header>
+
+<div class="breadcrumb-bar">
+    <div class="breadcrumb-content">
+        <div class="nav-breadcrumb">
+            <a href="#" onclick="goToDashboard()">Dashboard</a>
+            <span>›</span>
+            <span>Neue Entität anlegen</span>
+        </div>
+    </div>
+</div>
+
+<main class="main-container">
+    <section class="page-header">
+        <h2>Neue Entität anlegen</h2>
+        <p>Schlagen Sie eine neue Entität für die GND vor. Wählen Sie zunächst den passenden Entitätstyp aus.</p>
+    </section>
+
+    <section class="progress-indicator" id="progressIndicator">
+        <div class="progress-steps">
+            <div class="progress-step active">
+                <div class="step-number">1</div>
+                <span>Typ auswählen</span>
+            </div>
+            <div class="progress-step" id="step2">
+                <div class="step-number">2</div>
+                <span>Daten eingeben</span>
+            </div>
+            <div class="progress-step" id="step3">
+                <div class="step-number">3</div>
+                <span>Überprüfen</span>
             </div>
         </div>
-    </header>
+    </section>
 
-    <main class="main-container">
-        <section class="page-header">
-            <h2>Neue Entität anlegen</h2>
-            <p>Schlagen Sie eine neue Entität für die GND vor. Wählen Sie zunächst den passenden Entitätstyp aus.</p>
-        </section>
+    <section class="type-selection" id="typeSelection">
+        <h3>Wählen Sie den Entitätstyp:</h3>
+        <div class="type-grid">
+            <div class="type-card" data-type="person" onclick="selectType('person')">
+                <div class="type-icon">👤</div>
+                <h4>Person/Familie</h4>
+                <p>Individuelle Personen oder Familien</p>
+            </div>
 
-        <section class="progress-indicator" id="progressIndicator">
-            <div class="progress-steps">
-                <div class="progress-step active">
-                    <div class="step-number">1</div>
-                    <span>Typ auswählen</span>
+            <div class="type-card" data-type="organisation" onclick="selectType('organisation')">
+                <div class="type-icon">🏢</div>
+                <h4>Organisation</h4>
+                <p>Institutionen, Vereine, Unternehmen</p>
+            </div>
+
+            <div class="type-card" data-type="veranstaltung" onclick="selectType('veranstaltung')">
+                <div class="type-icon">📅</div>
+                <h4>Veranstaltung</h4>
+                <p>Konferenzen, Messen, Kongresse</p>
+            </div>
+
+            <div class="type-card" data-type="werk" onclick="selectType('werk')">
+                <div class="type-icon">📖</div>
+                <h4>Werk</h4>
+                <p>Bücher, Filme, Kunstwerke</p>
+            </div>
+
+            <div class="type-card" data-type="geografikum" onclick="selectType('geografikum')">
+                <div class="type-icon">🌍</div>
+                <h4>Geografikum</h4>
+                <p>Orte, Länder, geografische Regionen</p>
+            </div>
+
+            <div class="type-card" data-type="allgemeinbegriff" onclick="selectType('allgemeinbegriff')">
+                <div class="type-icon">💡</div>
+                <h4>Allgemeinbegriff</h4>
+                <p>Themen, Konzepte, Sachbegriffe</p>
+            </div>
+
+            <div class="type-card" data-type="bauwerk" onclick="selectType('bauwerk')">
+                <div class="type-icon">🏛️</div>
+                <h4>Bauwerk</h4>
+                <p>Gebäude, Denkmäler, Brücken</p>
+            </div>
+
+            <div class="type-card" data-type="beruf" onclick="selectType('beruf')">
+                <div class="type-icon">⚒️</div>
+                <h4>Beruf</h4>
+                <p>Berufsbezeichnungen, Tätigkeiten</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Person/Familie Formular -->
+    <form class="entity-form" id="form-person">
+        <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Person/Familie - Daten eingeben</h3>
+
+        <div class="form-section">
+            <h4>Grunddaten</h4>
+            <div class="form-group">
+                <label for="person-name">Bevorzugter Name <span class="required">*</span></label>
+                <input type="text" id="person-name" name="person-name" required
+                       placeholder="z.B. Schmidt, Maria">
+                <div class="form-help">Format: Nachname, Vorname</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="person-birth">Geburtsjahr</label>
+                    <input type="text" id="person-birth" name="person-birth"
+                           placeholder="z.B. 1975 oder 1975-1980">
                 </div>
-                <div class="progress-step" id="step2">
-                    <div class="step-number">2</div>
-                    <span>Daten eingeben</span>
-                </div>
-                <div class="progress-step" id="step3">
-                    <div class="step-number">3</div>
-                    <span>Überprüfen</span>
+                <div class="form-group">
+                    <label for="person-death">Sterbejahr</label>
+                    <input type="text" id="person-death" name="person-death"
+                           placeholder="z.B. 2020 oder noch lebend">
                 </div>
             </div>
-        </section>
 
-        <section class="type-selection" id="typeSelection">
-            <h3>Wählen Sie den Entitätstyp:</h3>
-            <div class="type-grid">
-                <div class="type-card" data-type="person" onclick="selectType('person')">
-                    <div class="type-icon">👤</div>
-                    <h4>Person/Familie</h4>
-                    <p>Individuelle Personen oder Familien</p>
+            <div class="form-group">
+                <label for="person-profession">Beruf/Tätigkeit</label>
+                <input type="text" id="person-profession" name="person-profession"
+                       placeholder="z.B. Bibliothekarin, Forscherin">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4>Zusätzliche Informationen</h4>
+            <div class="form-group">
+                <label for="person-bio">Biografische Angaben</label>
+                <textarea id="person-bio" name="person-bio"
+                          placeholder="Kurze biografische Informationen..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="person-sources">Quellen und Belege</label>
+                <textarea id="person-sources" name="person-sources"
+                          placeholder="Literatur, Webseiten, andere Quellen..."></textarea>
+            </div>
+        </div>
+    </form>
+
+    <!-- Organisation Formular -->
+    <form class="entity-form" id="form-organisation">
+        <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Organisation - Daten eingeben</h3>
+
+        <div class="form-section">
+            <h4>Grunddaten</h4>
+            <div class="form-group">
+                <label for="org-name">Name der Organisation <span class="required">*</span></label>
+                <input type="text" id="org-name" name="org-name" required
+                       placeholder="z.B. Deutsche Nationalbibliothek">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="org-founded">Gründungsjahr</label>
+                    <input type="text" id="org-founded" name="org-founded"
+                           placeholder="z.B. 1912">
                 </div>
-                
-                <div class="type-card" data-type="organisation" onclick="selectType('organisation')">
-                    <div class="type-icon">🏢</div>
-                    <h4>Organisation</h4>
-                    <p>Institutionen, Vereine, Unternehmen</p>
-                </div>
-                
-                <div class="type-card" data-type="veranstaltung" onclick="selectType('veranstaltung')">
-                    <div class="type-icon">📅</div>
-                    <h4>Veranstaltung</h4>
-                    <p>Konferenzen, Messen, Kongresse</p>
-                </div>
-                
-                <div class="type-card" data-type="werk" onclick="selectType('werk')">
-                    <div class="type-icon">📖</div>
-                    <h4>Werk</h4>
-                    <p>Bücher, Filme, Kunstwerke</p>
-                </div>
-                
-                <div class="type-card" data-type="geografikum" onclick="selectType('geografikum')">
-                    <div class="type-icon">🌍</div>
-                    <h4>Geografikum</h4>
-                    <p>Orte, Länder, geografische Regionen</p>
-                </div>
-                
-                <div class="type-card" data-type="allgemeinbegriff" onclick="selectType('allgemeinbegriff')">
-                    <div class="type-icon">💡</div>
-                    <h4>Allgemeinbegriff</h4>
-                    <p>Themen, Konzepte, Sachbegriffe</p>
-                </div>
-                
-                <div class="type-card" data-type="bauwerk" onclick="selectType('bauwerk')">
-                    <div class="type-icon">🏛️</div>
-                    <h4>Bauwerk</h4>
-                    <p>Gebäude, Denkmäler, Brücken</p>
-                </div>
-                
-                <div class="type-card" data-type="beruf" onclick="selectType('beruf')">
-                    <div class="type-icon">⚒️</div>
-                    <h4>Beruf</h4>
-                    <p>Berufsbezeichnungen, Tätigkeiten</p>
+                <div class="form-group">
+                    <label for="org-dissolved">Auflösungsjahr</label>
+                    <input type="text" id="org-dissolved" name="org-dissolved"
+                           placeholder="falls aufgelöst">
                 </div>
             </div>
-        </section>
 
-        <!-- Person/Familie Formular -->
-        <form class="entity-form" id="form-person">
-            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Person/Familie - Daten eingeben</h3>
-            
-            <div class="form-section">
-                <h4>Grunddaten</h4>
+            <div class="form-group">
+                <label for="org-type">Organisationstyp</label>
+                <select id="org-type" name="org-type">
+                    <option value="">Bitte wählen...</option>
+                    <option value="bibliothek">Bibliothek</option>
+                    <option value="universität">Universität</option>
+                    <option value="forschungseinrichtung">Forschungseinrichtung</option>
+                    <option value="verein">Verein</option>
+                    <option value="unternehmen">Unternehmen</option>
+                    <option value="behörde">Behörde</option>
+                    <option value="sonstiges">Sonstiges</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="org-location">Ort/Sitz</label>
+                <input type="text" id="org-location" name="org-location"
+                       placeholder="z.B. Leipzig, Deutschland">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4>Zusätzliche Informationen</h4>
+            <div class="form-group">
+                <label for="org-description">Beschreibung</label>
+                <textarea id="org-description" name="org-description"
+                          placeholder="Kurze Beschreibung der Organisation..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="org-sources">Quellen und Belege</label>
+                <textarea id="org-sources" name="org-sources"
+                          placeholder="Literatur, Webseiten, andere Quellen..."></textarea>
+            </div>
+        </div>
+    </form>
+
+    <!-- Veranstaltung Formular -->
+    <form class="entity-form" id="form-veranstaltung">
+        <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Veranstaltung - Daten eingeben</h3>
+
+        <div class="form-section">
+            <h4>Grunddaten</h4>
+            <div class="form-group">
+                <label for="event-name">Name der Veranstaltung <span class="required">*</span></label>
+                <input type="text" id="event-name" name="event-name" required
+                       placeholder="z.B. Bibliothekartag 2024">
+            </div>
+
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="person-name">Bevorzugter Name <span class="required">*</span></label>
-                    <input type="text" id="person-name" name="person-name" required 
-                           placeholder="z.B. Schmidt, Maria">
-                    <div class="form-help">Format: Nachname, Vorname</div>
+                    <label for="event-start">Beginn</label>
+                    <input type="date" id="event-start" name="event-start">
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="person-birth">Geburtsjahr</label>
-                        <input type="text" id="person-birth" name="person-birth" 
-                               placeholder="z.B. 1975 oder 1975-1980">
-                    </div>
-                    <div class="form-group">
-                        <label for="person-death">Sterbejahr</label>
-                        <input type="text" id="person-death" name="person-death" 
-                               placeholder="z.B. 2020 oder noch lebend">
-                    </div>
-                </div>
-                
                 <div class="form-group">
-                    <label for="person-profession">Beruf/Tätigkeit</label>
-                    <input type="text" id="person-profession" name="person-profession" 
-                           placeholder="z.B. Bibliothekarin, Forscherin">
+                    <label for="event-end">Ende</label>
+                    <input type="date" id="event-end" name="event-end">
                 </div>
             </div>
-            
-            <div class="form-section">
-                <h4>Zusätzliche Informationen</h4>
-                <div class="form-group">
-                    <label for="person-bio">Biografische Angaben</label>
-                    <textarea id="person-bio" name="person-bio" 
-                              placeholder="Kurze biografische Informationen..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="person-sources">Quellen und Belege</label>
-                    <textarea id="person-sources" name="person-sources" 
-                              placeholder="Literatur, Webseiten, andere Quellen..."></textarea>
-                </div>
-            </div>
-        </form>
 
-        <!-- Organisation Formular -->
-        <form class="entity-form" id="form-organisation">
-            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Organisation - Daten eingeben</h3>
-            
-            <div class="form-section">
-                <h4>Grunddaten</h4>
+            <div class="form-group">
+                <label for="event-location">Veranstaltungsort</label>
+                <input type="text" id="event-location" name="event-location"
+                       placeholder="z.B. Hamburg, Deutschland">
+            </div>
+
+            <div class="form-group">
+                <label for="event-organizer">Veranstalter</label>
+                <input type="text" id="event-organizer" name="event-organizer"
+                       placeholder="z.B. VDB - Verein Deutscher Bibliothekare">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4>Zusätzliche Informationen</h4>
+            <div class="form-group">
+                <label for="event-description">Beschreibung</label>
+                <textarea id="event-description" name="event-description"
+                          placeholder="Kurze Beschreibung der Veranstaltung..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="event-sources">Quellen und Belege</label>
+                <textarea id="event-sources" name="event-sources"
+                          placeholder="Webseiten, Programme, andere Quellen..."></textarea>
+            </div>
+        </div>
+    </form>
+
+    <!-- Werk Formular -->
+    <form class="entity-form" id="form-werk">
+        <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Werk - Daten eingeben</h3>
+
+        <div class="form-section">
+            <h4>Grunddaten</h4>
+            <div class="form-group">
+                <label for="work-title">Titel <span class="required">*</span></label>
+                <input type="text" id="work-title" name="work-title" required
+                       placeholder="z.B. Faust. Eine Tragödie">
+            </div>
+
+            <div class="form-group">
+                <label for="work-author">Autor/Urheber</label>
+                <input type="text" id="work-author" name="work-author"
+                       placeholder="z.B. Goethe, Johann Wolfgang von">
+            </div>
+
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="org-name">Name der Organisation <span class="required">*</span></label>
-                    <input type="text" id="org-name" name="org-name" required 
-                           placeholder="z.B. Deutsche Nationalbibliothek">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="org-founded">Gründungsjahr</label>
-                        <input type="text" id="org-founded" name="org-founded" 
-                               placeholder="z.B. 1912">
-                    </div>
-                    <div class="form-group">
-                        <label for="org-dissolved">Auflösungsjahr</label>
-                        <input type="text" id="org-dissolved" name="org-dissolved" 
-                               placeholder="falls aufgelöst">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="org-type">Organisationstyp</label>
-                    <select id="org-type" name="org-type">
+                    <label for="work-type">Werktyp</label>
+                    <select id="work-type" name="work-type">
                         <option value="">Bitte wählen...</option>
-                        <option value="bibliothek">Bibliothek</option>
-                        <option value="universität">Universität</option>
-                        <option value="forschungseinrichtung">Forschungseinrichtung</option>
-                        <option value="verein">Verein</option>
-                        <option value="unternehmen">Unternehmen</option>
-                        <option value="behörde">Behörde</option>
+                        <option value="buch">Buch</option>
+                        <option value="artikel">Artikel</option>
+                        <option value="film">Film</option>
+                        <option value="musik">Musikwerk</option>
+                        <option value="kunstwerk">Kunstwerk</option>
+                        <option value="software">Software</option>
                         <option value="sonstiges">Sonstiges</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
-                    <label for="org-location">Ort/Sitz</label>
-                    <input type="text" id="org-location" name="org-location" 
-                           placeholder="z.B. Leipzig, Deutschland">
+                    <label for="work-year">Erscheinungs-/Entstehungsjahr</label>
+                    <input type="text" id="work-year" name="work-year"
+                           placeholder="z.B. 1808">
                 </div>
             </div>
-            
-            <div class="form-section">
-                <h4>Zusätzliche Informationen</h4>
-                <div class="form-group">
-                    <label for="org-description">Beschreibung</label>
-                    <textarea id="org-description" name="org-description" 
-                              placeholder="Kurze Beschreibung der Organisation..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="org-sources">Quellen und Belege</label>
-                    <textarea id="org-sources" name="org-sources" 
-                              placeholder="Literatur, Webseiten, andere Quellen..."></textarea>
-                </div>
-            </div>
-        </form>
 
-        <!-- Veranstaltung Formular -->
-        <form class="entity-form" id="form-veranstaltung">
-            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Veranstaltung - Daten eingeben</h3>
-            
-            <div class="form-section">
-                <h4>Grunddaten</h4>
-                <div class="form-group">
-                    <label for="event-name">Name der Veranstaltung <span class="required">*</span></label>
-                    <input type="text" id="event-name" name="event-name" required 
-                           placeholder="z.B. Bibliothekartag 2024">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="event-start">Beginn</label>
-                        <input type="date" id="event-start" name="event-start">
-                    </div>
-                    <div class="form-group">
-                        <label for="event-end">Ende</label>
-                        <input type="date" id="event-end" name="event-end">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="event-location">Veranstaltungsort</label>
-                    <input type="text" id="event-location" name="event-location" 
-                           placeholder="z.B. Hamburg, Deutschland">
-                </div>
-                
-                <div class="form-group">
-                    <label for="event-organizer">Veranstalter</label>
-                    <input type="text" id="event-organizer" name="event-organizer" 
-                           placeholder="z.B. VDB - Verein Deutscher Bibliothekare">
-                </div>
+            <div class="form-group">
+                <label for="work-publisher">Verlag/Herausgeber</label>
+                <input type="text" id="work-publisher" name="work-publisher"
+                       placeholder="z.B. Cotta'sche Buchhandlung">
             </div>
-            
-            <div class="form-section">
-                <h4>Zusätzliche Informationen</h4>
-                <div class="form-group">
-                    <label for="event-description">Beschreibung</label>
-                    <textarea id="event-description" name="event-description" 
-                              placeholder="Kurze Beschreibung der Veranstaltung..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="event-sources">Quellen und Belege</label>
-                    <textarea id="event-sources" name="event-sources" 
-                              placeholder="Webseiten, Programme, andere Quellen..."></textarea>
-                </div>
-            </div>
-        </form>
-
-        <!-- Werk Formular -->
-        <form class="entity-form" id="form-werk">
-            <h3 style="color: #2c5aa0; margin-bottom: 2rem;">Werk - Daten eingeben</h3>
-            
-            <div class="form-section">
-                <h4>Grunddaten</h4>
-                <div class="form-group">
-                    <label for="work-title">Titel <span class="required">*</span></label>
-                    <input type="text" id="work-title" name="work-title" required 
-                           placeholder="z.B. Faust. Eine Tragödie">
-                </div>
-                
-                <div class="form-group">
-                    <label for="work-author">Autor/Urheber</label>
-                    <input type="text" id="work-author" name="work-author" 
-                           placeholder="z.B. Goethe, Johann Wolfgang von">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="work-type">Werktyp</label>
-                        <select id="work-type" name="work-type">
-                            <option value="">Bitte wählen...</option>
-                            <option value="buch">Buch</option>
-                            <option value="artikel">Artikel</option>
-                            <option value="film">Film</option>
-                            <option value="musik">Musikwerk</option>
-                            <option value="kunstwerk">Kunstwerk</option>
-                            <option value="software">Software</option>
-                            <option value="sonstiges">Sonstiges</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="work-year">Erscheinungs-/Entstehungsjahr</label>
-                        <input type="text" id="work-year" name="work-year" 
-                               placeholder="z.B. 1808">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="work-publisher">Verlag/Herausgeber</label>
-                    <input type="text" id="work-publisher" name="work-publisher" 
-                           placeholder="z.B. Cotta'sche Buchhandlung">
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h4>Zusätzliche Informationen</h4>
-                <div class="form-group">
-                    <label for="work-description">Inhaltsbeschreibung</label>
-                    <textarea id="work-description" name="work-description" 
-                              placeholder="Kurze Beschreibung des Werks..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="work-isbn">ISBN/ISSN/DOI</label>
-                    <input type="text" id="work-isbn" name="work-isbn" 
-                           placeholder="z.B. 978-3-16-148410-0">
-                </div>
-                
-                <div class="form-group">
-                    <label for="work-sources">Quellen und Belege</label>
-                    <textarea id="work-sources" name="work-sources" 
-                              placeholder="Kataloge, Bibliografien, andere Quellen..."></textarea>
-                </div>
-            </div>
-        </form>
-
-        <!-- Weitere Formulare für andere Typen würden hier folgen -->
-        
-        <div class="form-actions" id="formActions" style="display: none;">
-            <button type="button" class="btn btn-back" onclick="goBackToSelection()">Zurück zur Auswahl</button>
-            <button type="button" class="btn btn-outline" onclick="saveDraft()">Als Entwurf speichern</button>
-            <button type="button" class="btn btn-primary" onclick="submitEntity()">Entität vorschlagen</button>
         </div>
-    </main>
 
-    <script>
-        let selectedType = null;
+        <div class="form-section">
+            <h4>Zusätzliche Informationen</h4>
+            <div class="form-group">
+                <label for="work-description">Inhaltsbeschreibung</label>
+                <textarea id="work-description" name="work-description"
+                          placeholder="Kurze Beschreibung des Werks..."></textarea>
+            </div>
 
-        function selectType(type) {
-            selectedType = type;
-            
-            // Entferne 'selected' Klasse von allen Karten
-            document.querySelectorAll('.type-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            // Füge 'selected' Klasse zur gewählten Karte hinzu
-            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-            
-            // Zeige entsprechendes Formular nach kurzer Verzögerung
-            setTimeout(() => {
-                showForm(type);
-            }, 300);
+            <div class="form-group">
+                <label for="work-isbn">ISBN/ISSN/DOI</label>
+                <input type="text" id="work-isbn" name="work-isbn"
+                       placeholder="z.B. 978-3-16-148410-0">
+            </div>
+
+            <div class="form-group">
+                <label for="work-sources">Quellen und Belege</label>
+                <textarea id="work-sources" name="work-sources"
+                          placeholder="Kataloge, Bibliografien, andere Quellen..."></textarea>
+            </div>
+        </div>
+    </form>
+
+    <!-- Weitere Formulare für andere Typen würden hier folgen -->
+
+    <div class="form-actions" id="formActions" style="display: none;">
+        <button type="button" class="btn btn-back" onclick="goBackToSelection()">Zurück zur Auswahl</button>
+        <button type="button" class="btn btn-outline" onclick="saveDraft()">Als Entwurf speichern</button>
+        <button type="button" class="btn btn-primary" onclick="submitEntity()">Entität vorschlagen</button>
+    </div>
+</main>
+
+<script>
+    let selectedType = null;
+
+    function selectType(type) {
+        selectedType = type;
+
+        // Entferne 'selected' Klasse von allen Karten
+        document.querySelectorAll('.type-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        // Füge 'selected' Klasse zur gewählten Karte hinzu
+        document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+
+        // Zeige entsprechendes Formular nach kurzer Verzögerung
+        setTimeout(() => {
+            showForm(type);
+        }, 300);
+    }
+
+    function showForm(type) {
+        // Verstecke Typ-Auswahl
+        document.getElementById('typeSelection').style.display = 'none';
+
+        // Zeige Progress Indicator
+        document.getElementById('progressIndicator').classList.add('active');
+        document.getElementById('step2').classList.add('active');
+
+        // Verstecke alle Formulare
+        document.querySelectorAll('.entity-form').forEach(form => {
+            form.classList.remove('active');
+        });
+
+        // Zeige entsprechendes Formular
+        const targetForm = document.getElementById(`form-${type}`);
+        if (targetForm) {
+            targetForm.classList.add('active');
+        } else {
+            // Fallback für noch nicht implementierte Formulare
+            alert(`Formular für ${type} ist noch in Entwicklung.`);
+            goBackToSelection();
+            return;
         }
 
-        function showForm(type) {
-            // Verstecke Typ-Auswahl
-            document.getElementById('typeSelection').style.display = 'none';
-            
-            // Zeige Progress Indicator
-            document.getElementById('progressIndicator').classList.add('active');
-            document.getElementById('step2').classList.add('active');
-            
-            // Verstecke alle Formulare
-            document.querySelectorAll('.entity-form').forEach(form => {
-                form.classList.remove('active');
-            });
-            
-            // Zeige entsprechendes Formular
-            const targetForm = document.getElementById(`form-${type}`);
-            if (targetForm) {
-                targetForm.classList.add('active');
+        // Zeige Form-Aktionen
+        document.getElementById('formActions').style.display = 'flex';
+    }
+
+    function goBackToSelection() {
+        // Zeige Typ-Auswahl wieder
+        document.getElementById('typeSelection').style.display = 'block';
+
+        // Verstecke Progress Indicator
+        document.getElementById('progressIndicator').classList.remove('active');
+        document.getElementById('step2').classList.remove('active');
+
+        // Verstecke alle Formulare
+        document.querySelectorAll('.entity-form').forEach(form => {
+            form.classList.remove('active');
+        });
+
+        // Verstecke Form-Aktionen
+        document.getElementById('formActions').style.display = 'none';
+
+        // Entferne Auswahl
+        document.querySelectorAll('.type-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+
+        selectedType = null;
+    }
+
+    function saveDraft() {
+        if (!selectedType) return;
+
+        alert(`Entwurf für ${selectedType} wurde gespeichert. Sie können ihn später aus dem Dashboard heraus bearbeiten.`);
+    }
+
+    function submitEntity() {
+        if (!selectedType) return;
+
+        // Validierung würde hier stattfinden
+        const form = document.querySelector('.entity-form.active');
+        const requiredFields = form.querySelectorAll('[required]');
+        let valid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = '#dc3545';
+                valid = false;
             } else {
-                // Fallback für noch nicht implementierte Formulare
-                alert(`Formular für ${type} ist noch in Entwicklung.`);
-                goBackToSelection();
-                return;
+                field.style.borderColor = '#e9ecef';
             }
-            
-            // Zeige Form-Aktionen
-            document.getElementById('formActions').style.display = 'flex';
+        });
+
+        if (!valid) {
+            alert('Bitte füllen Sie alle Pflichtfelder aus.');
+            return;
         }
 
-        function goBackToSelection() {
-            // Zeige Typ-Auswahl wieder
-            document.getElementById('typeSelection').style.display = 'block';
-            
-            // Verstecke Progress Indicator
-            document.getElementById('progressIndicator').classList.remove('active');
-            document.getElementById('step2').classList.remove('active');
-            
-            // Verstecke alle Formulare
-            document.querySelectorAll('.entity-form').forEach(form => {
-                form.classList.remove('active');
-            });
-            
-            // Verstecke Form-Aktionen
-            document.getElementById('formActions').style.display = 'none';
-            
-            // Entferne Auswahl
-            document.querySelectorAll('.type-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            selectedType = null;
-        }
+        // Simuliere Einreichung
+        document.getElementById('step3').classList.add('active');
+        alert(`Ihre ${selectedType}-Entität wurde erfolgreich eingereicht und wird nun von der Community geprüft. Sie erhalten eine Benachrichtigung über den Status.`);
 
-        function saveDraft() {
-            if (!selectedType) return;
-            
-            alert(`Entwurf für ${selectedType} wurde gespeichert. Sie können ihn später aus dem Dashboard heraus bearbeiten.`);
-        }
+        // Weiterleitung zum Dashboard
+        setTimeout(() => {
+            window.location.href = 'gndcs-dashboard.html';
+        }, 2000);
+    }
 
-        function submitEntity() {
-            if (!selectedType) return;
-            
-            // Validierung würde hier stattfinden
-            const form = document.querySelector('.entity-form.active');
-            const requiredFields = form.querySelectorAll('[required]');
-            let valid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.style.borderColor = '#dc3545';
-                    valid = false;
-                } else {
-                    field.style.borderColor = '#e9ecef';
-                }
-            });
-            
-            if (!valid) {
-                alert('Bitte füllen Sie alle Pflichtfelder aus.');
-                return;
-            }
-            
-            // Simuliere Einreichung
-            document.getElementById('step3').classList.add('active');
-            alert(`Ihre ${selectedType}-Entität wurde erfolgreich eingereicht und wird nun von der Community geprüft. Sie erhalten eine Benachrichtigung über den Status.`);
-            
-            // Weiterleitung zum Dashboard
-            setTimeout(() => {
-                goToDashboard();
-            }, 2000);
-        }
-
-        function goToDashboard() {
-            alert('Weiterleitung zum Dashboard würde hier erfolgen.');
-            // window.location.href = 'dashboard.html';
+            function goToDashboard() {
+            window.location.href = 'gndcs-dashboard.html';
         }
 
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden? Ungespeicherte Änderungen gehen verloren.')) {
-                alert('Abmeldung erfolgreich.');
-                // window.location.href = 'index.html';
+                alert('Abmeldung erfolgreich. Sie werden zur Startseite weitergeleitet.');
+                window.location.href = 'gndcs-welcome.html';
             }
         }
 
-        // Auto-Save Funktionalität für Entwürfe
-        let autoSaveTimeout;
-        
-        document.addEventListener('input', function(e) {
-            if (e.target.closest('.entity-form')) {
-                clearTimeout(autoSaveTimeout);
-                autoSaveTimeout = setTimeout(() => {
-                    console.log('Auto-Save: Entwurf gespeichert');
-                    // Hier würde automatisches Speichern implementiert werden
-                }, 30000); // Speichere nach 30 Sekunden Inaktivität
-            }
-        });
-    </script>
+    // Auto-Save Funktionalität für Entwürfe
+    let autoSaveTimeout;
+
+    document.addEventListener('input', function(e) {
+        if (e.target.closest('.entity-form')) {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                console.log('Auto-Save: Entwurf gespeichert');
+                // Hier würde automatisches Speichern implementiert werden
+            }, 30000); // Speichere nach 30 Sekunden Inaktivität
+        }
+    });
+</script>
 </body>
 </html>

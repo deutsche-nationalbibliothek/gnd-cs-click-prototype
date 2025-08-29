@@ -55,6 +55,48 @@
             justify-content: center;
             font-weight: bold;
             color: #2c5aa0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-section a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-breadcrumb a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
         }
 
         .user-section {
@@ -334,7 +376,9 @@
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
-                <div class="logo">GND</div>
+                <a href="gndcs-dashboard.html">
+                    <div class="logo">GND</div>
+                </a>
                 <h1>Community Space</h1>
             </div>
             <div class="user-section">
@@ -348,6 +392,16 @@
     </header>
 
     <main class="main-container">
+        <section class="breadcrumb-bar">
+            <div class="breadcrumb-content">
+                <nav class="nav-breadcrumb">
+                    <a href="gndcs-welcome.html">Start</a>
+                    <span>•</span>
+                    <span>Dashboard</span>
+                </nav>
+            </div>
+        </section>
+
         <section class="welcome-section">
             <h2>Willkommen zurück, Maria!</h2>
             <p>Sie haben 3 neue Benachrichtigungen und 2 Beiträge warten auf Ihre Bearbeitung.</p>
@@ -455,18 +509,16 @@
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 alert('Abmeldung erfolgreich. Sie werden zur Startseite weitergeleitet.');
-                // window.location.href = 'index.html';
+                window.location.href = 'gndcs-welcome.html';
             }
         }
 
         function goToIncubator() {
-            alert('Weiterleitung zur "Neue Entität anlegen" Seite würde hier erfolgen.');
-            // window.location.href = 'incubator.html';
+            window.location.href = 'gndcs-incubator.html';
         }
 
         function goToEdit() {
-            alert('Weiterleitung zur "Entität bearbeiten" Seite würde hier erfolgen.');
-            // window.location.href = 'edit.html';
+            window.location.href = 'gndcs-edit.html';
         }
 
         function viewNotifications() {
