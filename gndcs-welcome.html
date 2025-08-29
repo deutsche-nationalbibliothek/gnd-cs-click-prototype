@@ -285,6 +285,35 @@
             color: #666;
         }
 
+        .breadcrumb-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-breadcrumb a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -316,6 +345,13 @@
             </div>
         </div>
     </header>
+
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-content">
+            <div class="nav-breadcrumb">
+            </div>
+        </div>
+    </div>
 
     <main class="main-container">
         <section class="hero-section">

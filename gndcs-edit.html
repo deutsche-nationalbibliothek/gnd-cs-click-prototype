@@ -466,7 +466,7 @@
         <div class="breadcrumb-content">
             <div class="nav-breadcrumb">
                 <a href="#" onclick="goToDashboard()">Dashboard</a>
-                <span>›</span>
+                <span>•</span>
                 <span>Entität ergänzen & korrigieren</span>
             </div>
         </div>
@@ -615,12 +615,26 @@
             showLoading();
             
             setTimeout(() => {
+                // Verschiedene Beispieldaten für verschiedene GND-Nummern
                 if (gndNumber === '124525741') {
-                    // Beispieldaten für Götz Bierling
-                    loadExampleEntity();
+                    loadExampleEntity('124525741', 'Person (piz)', 'Bierling, Götz', 'Rechtsanwalt; Jurist');
+                } else if (gndNumber === '118540238') {
+                    loadExampleEntity('118540238', 'Person (piz)', 'Goethe, Johann Wolfgang von', 'Dichter; Schriftsteller');
+                } else if (gndNumber === '10096318X') {
+                    loadExampleEntity('10096318X', 'Person (piz)', 'Bach, Johann Sebastian', 'Komponist; Musiker');
+                } else if (gndNumber === '2021638-7') {
+                    loadExampleEntity('2021638-7', 'Organisation (kio)', 'Deutsche Nationalbibliothek', 'Nationalbibliothek; Bibliothek');
+                } else if (gndNumber === '5001234-5') {
+                    loadExampleEntity('5001234-5', 'Organisation (kio)', 'Universität Hamburg', 'Universität; Hochschule');
+                } else if (gndNumber === '7501234-6') {
+                    loadExampleEntity('7501234-6', 'Geografikum (gik)', 'Hamburg', 'Stadt; Freie und Hansestadt');
+                } else if (gndNumber === '4001234-7') {
+                    loadExampleEntity('4001234-7', 'Werk (swd)', 'Faust. Eine Tragödie', 'Drama; Tragödie');
+                } else if (gndNumber.match(/^\d+$/)) {
+                    // Generische Entität für andere Zahlen
+                    loadExampleEntity(gndNumber, 'Organisation (kio)', 'Beispiel Organisation', 'Universitätsbibliothek; Forschungseinrichtung');
                 } else {
-                    // Simuliere andere Entität oder Fehler
-                    simulateEntityLoad(gndNumber);
+                    showError('Ungültige GND-Nummer. Bitte überprüfen Sie Ihre Eingabe.');
                 }
             }, 1000);
         }
@@ -631,54 +645,41 @@
             display.innerHTML = '<div class="loading">Entität wird geladen...</div>';
         }
 
-        function loadExampleEntity() {
+        function loadExampleEntity(id, type, name, description) {
             currentEntity = {
-                id: '124525741',
-                type: 'Person (piz)',
-                name: 'Bierling, Götz',
-                description: 'Rechtsanwalt; Jurist'
+                id: id,
+                type: type,
+                name: name,
+                description: description
             };
 
-            document.getElementById('entityType').textContent = currentEntity.type;
-            document.getElementById('entityName').textContent = currentEntity.name;
-            document.getElementById('entityDescription').textContent = currentEntity.description;
-
-            // Restore the full entity display content
+            // Zeige die Entität an
             restoreEntityDisplay();
         }
 
-        function simulateEntityLoad(gndNumber) {
-            // Simuliere verschiedene Entitäten oder Fehler
-            if (gndNumber.match(/^\d+$/)) {
-                currentEntity = {
-                    id: gndNumber,
-                    type: 'Organisation (kio)',
-                    name: 'Beispiel Organisation',
-                    description: 'Universitätsbibliothek; Forschungseinrichtung'
-                };
 
-                document.getElementById('entityType').textContent = currentEntity.type;
-                document.getElementById('entityName').textContent = currentEntity.name;
-                document.getElementById('entityDescription').textContent = currentEntity.description;
-
-                // Update GND data preview
-                document.getElementById('gndDataPreview').innerHTML = `
-                    <strong>Aktuelle GND-Daten:</strong><br>
-                    Name: ${currentEntity.name}<br>
-                    Beschreibung: ${currentEntity.description}<br>
-                    GND-ID: ${currentEntity.id}<br>
-                    Typ: ${currentEntity.type}<br>
-                    Status: Aktiv
-                `;
-
-                restoreEntityDisplay();
-            } else {
-                showError('Ungültige GND-Nummer. Bitte überprüfen Sie Ihre Eingabe.');
-            }
-        }
 
         function restoreEntityDisplay() {
             const display = document.getElementById('entityDisplay');
+            
+            // Bestimme passende Addon-Daten basierend auf Entitätstyp
+            let geoData = '';
+            let identifierData = '';
+            
+            if (currentEntity.type.includes('Person')) {
+                geoData = '<div class="addon-item"><span>Geburtsort: Hamburg, Deutschland (53.5511, 9.9937)</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'geo\', 1)">✎</button></div>';
+                identifierData = '<div class="addon-item"><span>ORCID: 0000-0002-1825-0097</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 1)">✎</button></div><div class="addon-item"><span>LinkedIn: linkedin.com/in/example</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 2)">✎</button></div>';
+            } else if (currentEntity.type.includes('Organisation')) {
+                geoData = '<div class="addon-item"><span>Sitz: Deutschland</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'geo\', 1)">✎</button></div>';
+                identifierData = '<div class="addon-item"><span>ISIL: DE-123</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 1)">✎</button></div>';
+            } else if (currentEntity.type.includes('Geografikum')) {
+                geoData = '<div class="addon-item"><span>Koordinaten: 53.5511, 9.9937</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'geo\', 1)">✎</button></div>';
+                identifierData = '<div class="addon-item"><span>GeoNames: 2911298</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 1)">✎</button></div>';
+            } else {
+                geoData = '<div class="no-data">Keine Einträge vorhanden</div>';
+                identifierData = '<div class="no-data">Keine Einträge vorhanden</div>';
+            }
+            
             display.innerHTML = `
                 <div class="entity-header">
                     <div class="entity-type">${currentEntity.type}</div>
@@ -725,12 +726,7 @@
                                     </button>
                                 </div>
                                 <div class="addon-items">
-                                    <div class="addon-item">
-                                        <span>Geburtsort: Hamburg, Deutschland (53.5511, 9.9937)</span>
-                                        <button class="btn btn-outline btn-icon" onclick="editAddon('geo', 1)">
-                                            ✎
-                                        </button>
-                                    </div>
+                                    ${geoData}
                                 </div>
                             </div>
                             <div class="addon-section">
@@ -741,18 +737,7 @@
                                     </button>
                                 </div>
                                 <div class="addon-items">
-                                    <div class="addon-item">
-                                        <span>ORCID: 0000-0002-1825-0097</span>
-                                        <button class="btn btn-outline btn-icon" onclick="editAddon('identifier', 1)">
-                                            ✎
-                                        </button>
-                                    </div>
-                                    <div class="addon-item">
-                                        <span>LinkedIn: linkedin.com/in/goetz-bierling</span>
-                                        <button class="btn btn-outline btn-icon" onclick="editAddon('identifier', 2)">
-                                            ✎
-                                        </button>
-                                    </div>
+                                    ${identifierData}
                                 </div>
                             </div>
                             <div class="addon-section">
