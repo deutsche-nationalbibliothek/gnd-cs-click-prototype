@@ -484,10 +484,10 @@
                 <div class="input-group">
                     <label for="gnd-number">GND-Nummer oder GNDcs-Nummer</label>
                     <input type="text" id="gnd-number" name="gnd-number" 
-                           placeholder="z.B. 124525741"
+                           placeholder="z.B. 4005728-8"
                            onkeydown="handleEnterKey(event)">
                     <div class="help-text">
-                        Geben Sie die GND-Nummer (z.B. 124525741) oder GNDcs-Nummer ein.
+                        Geben Sie die GND-Nummer (z.B. 124525741 oder 4005728-8) oder GNDcs-Nummer ein.
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="loadEntity()">Laden</button>
@@ -537,23 +537,6 @@
                         <span style="color: #666; font-size: 0.9rem;">Addons</span>
                     </div>
                     <div class="section-content" id="addon-data">
-                        <div class="addon-section">
-                            <div class="addon-header">
-                                <div class="addon-title">🌍 Geoinformationen</div>
-                                <button class="btn btn-outline btn-icon" onclick="addAddon('geo')" title="Neue Geoinformation hinzufügen">
-                                    +
-                                </button>
-                            </div>
-                            <div class="addon-items" id="geo-items">
-                                <div class="addon-item">
-                                    <span>Geburtsort: Hamburg, Deutschland (53.5511, 9.9937)</span>
-                                    <button class="btn btn-outline btn-icon" onclick="editAddon('geo', 1)">
-                                        ✎
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="addon-section">
                             <div class="addon-header">
                                 <div class="addon-title">🔗 Zusätzliche Identifier</div>
@@ -626,8 +609,8 @@
                     loadExampleEntity('2021638-7', 'Organisation (kio)', 'Deutsche Nationalbibliothek', 'Nationalbibliothek; Bibliothek');
                 } else if (gndNumber === '5001234-5') {
                     loadExampleEntity('5001234-5', 'Organisation (kio)', 'Universität Hamburg', 'Universität; Hochschule');
-                } else if (gndNumber === '7501234-6') {
-                    loadExampleEntity('7501234-6', 'Geografikum (gik)', 'Hamburg', 'Stadt; Freie und Hansestadt');
+                } else if (gndNumber === '4005728-8') {
+                    loadExampleEntity('4005728-8', 'Geografikum (gik, gif)', 'Berlin', 'Berlin; -1948; 03.10.1990-');
                 } else if (gndNumber === '4001234-7') {
                     loadExampleEntity('4001234-7', 'Werk (swd)', 'Faust. Eine Tragödie', 'Drama; Tragödie');
                 } else if (gndNumber.match(/^\d+$/)) {
@@ -665,18 +648,26 @@
             // Bestimme passende Addon-Daten basierend auf Entitätstyp
             let geoData = '';
             let identifierData = '';
+            let showGeoSection = false;
             
             if (currentEntity.type.includes('Person')) {
-                geoData = '<div class="addon-item"><span>Geburtsort: Hamburg, Deutschland (53.5511, 9.9937)</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'geo\', 1)">✎</button></div>';
+                // Keine Geoinformationen für Personen
                 identifierData = '<div class="addon-item"><span>ORCID: 0000-0002-1825-0097</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 1)">✎</button></div><div class="addon-item"><span>LinkedIn: linkedin.com/in/example</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 2)">✎</button></div>';
             } else if (currentEntity.type.includes('Organisation')) {
+                // Geoinformationen für Organisationen
                 geoData = '<div class="addon-item"><span>Sitz: Deutschland</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'geo\', 1)">✎</button></div>';
                 identifierData = '<div class="addon-item"><span>ISIL: DE-123</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 1)">✎</button></div>';
+                showGeoSection = true;
             } else if (currentEntity.type.includes('Geografikum')) {
+                // Geoinformationen für Geografika
                 geoData = '<div class="addon-item"><span>Koordinaten: 53.5511, 9.9937</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'geo\', 1)">✎</button></div>';
                 identifierData = '<div class="addon-item"><span>GeoNames: 2911298</span><button class="btn btn-outline btn-icon" onclick="editAddon(\'identifier\', 1)">✎</button></div>';
+                showGeoSection = true;
+            } else if (currentEntity.type.includes('Werk')) {
+                // Keine Geoinformationen für Werke
+                identifierData = '<div class="no-data">Keine Einträge vorhanden</div>';
             } else {
-                geoData = '<div class="no-data">Keine Einträge vorhanden</div>';
+                // Standardfall - keine Geoinformationen
                 identifierData = '<div class="no-data">Keine Einträge vorhanden</div>';
             }
             
@@ -718,6 +709,7 @@
                             <span style="color: #666; font-size: 0.9rem;">Addons</span>
                         </div>
                         <div class="section-content" id="addon-data">
+                            ${showGeoSection ? `
                             <div class="addon-section">
                                 <div class="addon-header">
                                     <div class="addon-title">🌍 Geoinformationen</div>
@@ -729,6 +721,7 @@
                                     ${geoData}
                                 </div>
                             </div>
+                            ` : ''}
                             <div class="addon-section">
                                 <div class="addon-header">
                                     <div class="addon-title">🔗 Zusätzliche Identifier</div>
@@ -781,23 +774,35 @@
         }
 
         function addAddon(type) {
-            const typeNames = {
-                'geo': 'Geoinformation',
-                'identifier': 'Identifier', 
-                'collections': 'Sammlung/Katalog'
-            };
+            if (!currentEntity) return;
             
-            alert(`Neue ${typeNames[type]} hinzufügen\nFormular würde hier geöffnet werden.`);
+            if (type === 'geo') {
+                // Zur Geoinformations-Seite mit GND-Nummer weiterleiten
+                window.location.href = `gndcs-geoinfo.html?gnd=${currentEntity.id}`;
+            } else {
+                const typeNames = {
+                    'identifier': 'Identifier', 
+                    'collections': 'Sammlung/Katalog'
+                };
+                
+                alert(`Neue ${typeNames[type]} hinzufügen\nFormular würde hier geöffnet werden.`);
+            }
         }
 
         function editAddon(type, id) {
-            const typeNames = {
-                'geo': 'Geoinformation',
-                'identifier': 'Identifier',
-                'collections': 'Sammlung/Katalog'
-            };
+            if (!currentEntity) return;
             
-            alert(`${typeNames[type]} bearbeiten (ID: ${id})\nBearbeitungsformular würde hier geöffnet werden.`);
+            if (type === 'geo') {
+                // Zur Geoinformations-Seite mit GND-Nummer weiterleiten
+                window.location.href = `gndcs-geoinfo.html?gnd=${currentEntity.id}`;
+            } else {
+                const typeNames = {
+                    'identifier': 'Identifier',
+                    'collections': 'Sammlung/Katalog'
+                };
+                
+                alert(`${typeNames[type]} bearbeiten (ID: ${id})\nBearbeitungsformular würde hier geöffnet werden.`);
+            }
         }
 
         function goToDashboard() {

@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>Geoinformationen - GND Community Space</title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: #2c5aa0;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-left: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c5aa0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-section a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-breadcrumb a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2c5aa0;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+
+        .btn-outline:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            min-width: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-explorer {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-explorer:hover {
+            background: #138496;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            color: #2c5aa0;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-section h3 {
+            color: #2c5aa0;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .entity-display {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .entity-display.active {
+            display: block;
+        }
+
+        .entity-header {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .entity-type {
+            display: inline-block;
+            background: #2c5aa0;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .entity-description {
+            color: #666;
+            font-style: italic;
+        }
+
+        .geo-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-header:hover {
+            background: #e9ecef;
+        }
+
+        .section-title {
+            color: #2c5aa0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: #2c5aa0;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+            background: white;
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row .input-group {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .coordinate-input {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .coordinate-input input {
+            width: 120px;
+        }
+
+        .coordinate-input span {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .polygon-input {
+            margin-bottom: 1rem;
+        }
+
+        .polygon-points {
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 1rem;
+            background: #f8f9fa;
+            margin-top: 0.5rem;
+        }
+
+        .point-input {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .point-input input {
+            width: 100px;
+        }
+
+        .point-input button {
+            padding: 0.25rem 0.5rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .add-point-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        .relation-type-select {
+            margin-bottom: 1rem;
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .date-group {
+            flex: 1;
+        }
+
+        .date-group .input-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .approximate-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .approximate-checkbox input[type="checkbox"] {
+            width: auto;
+        }
+
+        .geo-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .geo-item {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .geo-item-header {
+            background: #f8f9fa;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .geo-item-title {
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+
+        .geo-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .geo-item-content {
+            padding: 1rem;
+        }
+
+        .geo-item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .coordinate-display {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+                 .success-message {
+             color: #28a745;
+             font-size: 0.9rem;
+             margin-top: 0.5rem;
+         }
+
+         .entity-list {
+             border: 1px solid #e9ecef;
+             border-radius: 4px;
+             padding: 1rem;
+             background: #f8f9fa;
+             margin-bottom: 1rem;
+             min-height: 60px;
+         }
+
+         .entity-item {
+             background: white;
+             border: 1px solid #e9ecef;
+             border-radius: 4px;
+             padding: 0.75rem;
+             margin-bottom: 0.5rem;
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+         }
+
+         .entity-item:last-child {
+             margin-bottom: 0;
+         }
+
+         .entity-item-info {
+             flex: 1;
+         }
+
+         .entity-item-type {
+             display: inline-block;
+             background: #2c5aa0;
+             color: white;
+             padding: 0.2rem 0.5rem;
+             border-radius: 8px;
+             font-size: 0.7rem;
+             font-weight: bold;
+             margin-right: 0.5rem;
+         }
+
+         .entity-item-name {
+             font-weight: bold;
+             color: #333;
+         }
+
+         .entity-item-description {
+             font-size: 0.9rem;
+             color: #666;
+             margin-top: 0.25rem;
+         }
+
+         .entity-item-actions {
+             display: flex;
+             gap: 0.5rem;
+         }
+
+         .add-entity-section {
+             margin-top: 1rem;
+             padding-top: 1rem;
+             border-top: 1px solid #e9ecef;
+         }
+
+         .no-entities {
+             color: #666;
+             font-style: italic;
+             text-align: center;
+             padding: 1rem;
+         }
+
+         .map-controls {
+             margin-top: 1rem;
+             padding-top: 1rem;
+             border-top: 1px solid #e9ecef;
+         }
+
+         .map-section {
+             margin-top: 2rem;
+             padding-top: 2rem;
+             border-top: 2px solid #e9ecef;
+         }
+
+         .map-container {
+             border: 1px solid #e9ecef;
+             border-radius: 8px;
+             overflow: hidden;
+             margin-top: 1rem;
+             height: 400px;
+         }
+
+         #map {
+             width: 100%;
+             height: 100%;
+         }
+
+         
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="gndcs-welcome.html">
+                    <div class="logo">GND</div>
+                    <h1>Community Space</h1>
+                </a>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">MS</div>
+                    <span>Maria Schmidt</span>
+                </div>
+                <a href="#" class="btn btn-secondary">Abmelden</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="breadcrumb-bar">
+        <div class="breadcrumb-content">
+            <div class="nav-breadcrumb">
+                <a href="gndcs-welcome.html">Startseite</a>
+                <span>›</span>
+                <a href="gndcs-dashboard.html">Dashboard</a>
+                <span>›</span>
+                <a href="gndcs-edit.html">Entität bearbeiten</a>
+                <span>›</span>
+                <span>Geoinformationen</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h2>🌍 Geoinformationen</h2>
+            <p>Ergänzen Sie geografische Informationen zu GND-Entitäten</p>
+        </div>
+
+
+
+
+
+        <div class="geo-form" id="geo-form">
+            <h3>Neue Geoinformation hinzufügen</h3>
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection('entities')">
+                    <div class="section-title">
+                        <div class="section-icon">🏛️</div>
+                        GND-Entitäten
+                    </div>
+                    <span>▼</span>
+                </div>
+                    <div class="section-content" id="entities-content">               
+                     <div class="input-group" style="margin-top: 2rem;">
+                         <label>Verknüpfte GND-Entitäten</label>
+                         <div class="entity-list" id="entity-list">
+                             <!-- Wird dynamisch gefüllt -->
+                         </div>
+                         <div class="help-text">
+                             Sie können mehrere GND-Entitäten zu dieser Geoinformation hinzufügen. 
+                             Die Geoinformation wird dann mit allen ausgewählten Entitäten verknüpft.
+                         </div>
+                     </div>
+                     <div class="input-group">
+                        <label>GND-Entitäten hinzufügen</label>
+                        <div class="search-input-group">
+                            <div class="input-group">
+                                <input type="text" id="add-entity-search" placeholder="GND-Nummer oder Name eingeben">
+                            </div>
+                            <button class="btn btn-primary" onclick="searchAndAddEntity()">Hinzufügen</button>
+                        </div>
+                        <div class="help-text">Geben Sie eine GND-Nummer oder den Namen einer Entität ein</div>
+                    </div>
+                 </div>
+            </div>
+
+        <div class="geo-form" id="geo-form">
+            <h3>Neue Geoinformation hinzufügen</h3>
+            
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection('coordinates')">
+                    <div class="section-title">
+                        <div class="section-icon">📍</div>
+                        Koordinaten
+                    </div>
+                    <span>▼</span>
+                </div>
+                <div class="section-content" id="coordinates-content">
+                                         <div class="input-group">
+                         <label for="coordinate-type">Koordinatentyp</label>
+                         <select id="coordinate-type" onchange="updateCoordinateForm()">
+                             <option value="">Bitte wählen...</option>
+                             <option value="point">Punktkoordinaten</option>
+                             <option value="line">Linien</option>
+                             <option value="polygon">Flächen (Multipolygon)</option>
+                             <option value="bbox">Rahmenkoordinaten (Bounding Box)</option>
+                         </select>
+                     </div>
+
+                     <div class="input-group" style="margin-top: 1rem;">
+                         <label for="coordinate-input-mode">Eingabemodus</label>
+                         <select id="coordinate-input-mode" onchange="toggleInputMode()">
+                             <option value="structured">Strukturierte Eingabe / Karteneingabe</option>
+                             <option value="text">Textstring (GeoJSON, WKT, etc.)</option>
+                         </select>
+                     </div>
+
+                                         <!-- Strukturierte Eingabe Container -->
+                     <div id="structured-input-container">
+                         <!-- Punktkoordinaten -->
+                         <div id="point-coordinates" class="hidden">
+                             <div class="coordinate-input">
+                                 <input type="number" id="point-lat" step="any" placeholder="Breitengrad">
+                                 <span>°N</span>
+                                 <input type="number" id="point-lon" step="any" placeholder="Längengrad">
+                                 <span>°E</span>
+                             </div>
+
+                         </div>
+
+                                                 <!-- Linien -->
+                         <div id="line-coordinates" class="hidden">
+                             <div class="polygon-input">
+                                 <label>Linienpunkte (mindestens 2 Punkte)</label>
+                                 <div class="polygon-points" id="line-points">
+                                     <div class="point-input">
+                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <span>°N</span>
+                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <span>°E</span>
+                                         <button onclick="removePoint(this)">Entfernen</button>
+                                     </div>
+                                     <div class="point-input">
+                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <span>°N</span>
+                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <span>°E</span>
+                                         <button onclick="removePoint(this)">Entfernen</button>
+                                     </div>
+                                 </div>
+                                 <button class="add-point-btn" onclick="addPoint('line-points')">Punkt hinzufügen</button>
+
+                             </div>
+                         </div>
+
+                                                 <!-- Flächen -->
+                         <div id="polygon-coordinates" class="hidden">
+                             <div class="polygon-input">
+                                 <label>Polygonpunkte (mindestens 3 Punkte)</label>
+                                 <div class="polygon-points" id="polygon-points">
+                                     <div class="point-input">
+                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <span>°N</span>
+                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <span>°E</span>
+                                         <button onclick="removePoint(this)">Entfernen</button>
+                                     </div>
+                                     <div class="point-input">
+                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <span>°N</span>
+                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <span>°E</span>
+                                         <button onclick="removePoint(this)">Entfernen</button>
+                                     </div>
+                                     <div class="point-input">
+                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <span>°N</span>
+                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <span>°E</span>
+                                         <button onclick="removePoint(this)">Entfernen</button>
+                                     </div>
+                                 </div>
+                                 <button class="add-point-btn" onclick="addPoint('polygon-points')">Punkt hinzufügen</button>
+
+                             </div>
+                         </div>
+
+                                                 <!-- Bounding Box -->
+                         <div id="bbox-coordinates" class="hidden">
+                             <div class="form-row">
+                                 <div class="input-group">
+                                     <label>Nordgrenze</label>
+                                     <input type="number" id="bbox-north" step="any" placeholder="Breitengrad">
+                                 </div>
+                                 <div class="input-group">
+                                     <label>Ostgrenze</label>
+                                     <input type="number" id="bbox-east" step="any" placeholder="Längengrad">
+                                 </div>
+                             </div>
+                             <div class="form-row">
+                                 <div class="input-group">
+                                     <label>Südgrenze</label>
+                                     <input type="number" id="bbox-south" step="any" placeholder="Breitengrad">
+                                 </div>
+                                 <div class="input-group">
+                                     <label>Westgrenze</label>
+                                     <input type="number" id="bbox-west" step="any" placeholder="Längengrad">
+                                 </div>
+                             </div>
+
+                         </div>
+                    </div>
+
+                                         <!-- Textstring Eingabe Container -->
+                     <div id="text-input-container" class="hidden">
+                         <div class="input-group">
+                             <label for="coordinate-text-format">Format</label>
+                             <select id="coordinate-text-format" onchange="updateTextFormat()">
+                                 <option value="geojson">GeoJSON</option>
+                                 <option value="wkt">WKT (Well-Known Text)</option>
+                                 <option value="gml">GML</option>
+                                 <option value="kml">KML</option>
+                                 <option value="custom">Benutzerdefiniert</option>
+                             </select>
+                         </div>
+                         <div class="input-group">
+                             <label for="coordinate-text-input">Koordinaten als Textstring</label>
+                             <textarea id="coordinate-text-input" rows="8" placeholder="Fügen Sie hier Ihre Koordinaten ein..."></textarea>
+                             <div class="help-text">
+                                 <strong>Unterstützte Formate:</strong><br>
+                                 • <strong>GeoJSON:</strong> {"type": "Point", "coordinates": [13.4050, 52.5200]}<br>
+                                 • <strong>WKT:</strong> POINT(13.4050 52.5200)<br>
+                                 • <strong>GML:</strong> &lt;gml:Point&gt;&lt;gml:coordinates&gt;13.4050,52.5200&lt;/gml:coordinates&gt;&lt;/gml:Point&gt;<br>
+                                 • <strong>KML:</strong> &lt;Point&gt;&lt;coordinates&gt;13.4050,52.5200,0&lt;/coordinates&gt;&lt;/Point&gt;
+                             </div>
+                         </div>
+                         <div class="input-group">
+                             <button class="btn btn-outline" onclick="parseCoordinateText()">Koordinaten parsen & validieren</button>
+                             <button class="btn btn-outline" onclick="clearCoordinateText()">Text löschen</button>
+                         </div>
+                         <div id="coordinate-validation-result" class="hidden">
+                             <!-- Validierungsergebnis wird hier angezeigt -->
+                         </div>
+                     </div>
+
+                                           <!-- Karte Container -->
+                      <div class="map-section">
+                          <div class="input-group">
+                              <label>Interaktive Karte</label>
+                          </div>
+                          <div class="map-container">
+                              <div id="map"></div>
+                          </div>
+                          <div class="help-text">
+                              <strong>Anleitung:</strong><br>
+                              • Klicken Sie auf das Polygonsymbol auf der Karte um Koordinaten durch Klicken zu setzen<br>
+                              • Ziehen Sie die Marker mit der Maus, um sie zu verschieben<br>
+                              • Verwenden Sie die "Entfernen"-Buttons in der strukturierten Eingabe zum Löschen von Koordinaten<br>
+                              • Die Karte zeigt automatisch die eingegebenen Koordinaten an
+                          </div>
+                      </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection('relation')">
+                    <div class="section-title">
+                        <div class="section-icon">🔗</div>
+                        Art der Relation
+                    </div>
+                    <span>▼</span>
+                </div>
+                <div class="section-content" id="relation-content">
+                    <div class="input-group">
+                        <label for="relation-type">Relationstyp</label>
+                        <select id="relation-type">
+                            <option value="">Bitte wählen...</option>
+                            <!-- Wird dynamisch gefüllt basierend auf Koordinatentyp -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection('dating')">
+                    <div class="section-title">
+                        <div class="section-icon">📅</div>
+                        Koordinatendatierung
+                    </div>
+                    <span>▼</span>
+                </div>
+                <div class="section-content" id="dating-content">
+                    <div class="date-inputs">
+                        <div class="date-group">
+                            <div class="input-group">
+                                <label for="start-date">Anfangsdatum</label>
+                                <input type="date" id="start-date">
+                            </div>
+                            <div class="approximate-checkbox">
+                                <input type="checkbox" id="start-approximate">
+                                <label for="start-approximate">Ungefähre Angabe</label>
+                            </div>
+                        </div>
+                        <div class="date-group">
+                            <div class="input-group">
+                                <label for="end-date">Enddatum</label>
+                                <input type="date" id="end-date">
+                            </div>
+                            <div class="approximate-checkbox">
+                                <input type="checkbox" id="end-approximate">
+                                <label for="end-approximate">Ungefähre Angabe</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="verbal-dating">Verbale Datierung</label>
+                        <textarea id="verbal-dating" rows="3" placeholder="z.B. 'Mittelalter', '19. Jahrhundert'"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection('metadata')">
+                    <div class="section-title">
+                        <div class="section-icon">📝</div>
+                        Zusatzinformationen
+                    </div>
+                    <span>▼</span>
+                </div>
+                <div class="section-content" id="metadata-content">
+                    <div class="input-group">
+                        <label for="source">Quelle</label>
+                        <input type="text" id="source" placeholder="z.B. 'Topographische Karte 1:25000'">
+                    </div>
+                    <div class="input-group">
+                        <label for="remarks">Bemerkungen</label>
+                        <textarea id="remarks" rows="4" placeholder="Zusätzliche Anmerkungen zu den Geoinformationen"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="saveGeoInfo()">Geoinformation speichern</button>
+                <button class="btn btn-outline" onclick="resetForm()">Formular zurücksetzen</button>
+            </div>
+        </div>
+
+        <div class="geo-list">
+            <h3>Bereits vorhandene Geoinformationen</h3>
+            <div id="existing-geo-list">
+                <!-- Wird dynamisch gefüllt -->
+            </div>
+                 </div>
+     </main>
+
+
+
+    <script>
+        // Beispieldaten für Relationstypen
+        const relationTypes = {
+            point: [
+                'Zentrum',
+                'Verwaltungssitz',
+                'Historisches Zentrum',
+                'Geografischer Mittelpunkt'
+            ],
+            line: [
+                'Flusslauf',
+                'Grenzlinie',
+                'Verkehrsweg',
+                'Historische Route'
+            ],
+            polygon: [
+                'Umriss',
+                'Administrative Grenze',
+                'Historische Grenze',
+                'Naturraum'
+            ],
+            bbox: [
+                'Rahmenkoordinaten',
+                'Grobbereich',
+                'Näherungsbereich'
+            ]
+        };
+
+                 // Array für verknüpfte GND-Entitäten
+         let linkedEntities = [];
+
+         // Map-Variablen
+         let map = null;
+         let currentMarkers = [];
+         let currentLines = [];
+         let currentPolygons = [];
+         let currentRectangles = [];
+         let mapInputMode = false;
+         let currentCoordinateType = '';
+
+         // Beispieldaten für vorhandene Geoinformationen
+         const existingGeoInfo = [
+            {
+                id: 1,
+                type: 'point',
+                coordinates: { lat: 52.5200, lon: 13.4050 },
+                relationType: 'Zentrum',
+                startDate: '1990-10-03',
+                endDate: null,
+                startApproximate: false,
+                endApproximate: false,
+                verbalDating: '',
+                source: 'OpenStreetMap',
+                remarks: 'Koordinaten des Berliner Zentrums'
+            },
+            {
+                id: 2,
+                type: 'bbox',
+                coordinates: { north: 52.6755, east: 13.7612, south: 52.3382, west: 13.0891 },
+                relationType: 'Rahmenkoordinaten',
+                startDate: '1990-10-03',
+                endDate: null,
+                startApproximate: false,
+                endApproximate: false,
+                verbalDating: '',
+                source: 'GADM Database',
+                remarks: 'Bounding Box des Landes Berlin'
+            }
+        ];
+
+        
+
+         function searchAndAddEntity() {
+             const searchValue = document.getElementById('add-entity-search').value.trim();
+             if (!searchValue) {
+                 alert('Bitte geben Sie eine GND-Nummer oder einen Namen ein.');
+                 return;
+             }
+
+             // Simuliere Suche nach Entität
+             const foundEntity = findEntityBySearch(searchValue);
+             if (foundEntity) {
+                 // Entität zur Liste hinzufügen
+                 addEntityToList(foundEntity);
+                 
+                 // Suchfeld leeren
+                 document.getElementById('add-entity-search').value = '';
+                 
+                                   // Bei der ersten Entität: Formular anzeigen
+                  if (linkedEntities.length === 1) {
+                      document.getElementById('geo-form').style.display = 'block';
+                      loadExistingGeoInfo();
+                  }
+             } else {
+                 alert('Entität nicht gefunden. Bitte überprüfen Sie Ihre Eingabe.');
+             }
+         }
+
+         function findEntityBySearch(searchValue) {
+             // Beispieldaten für verschiedene Suchbegriffe
+             const searchData = {
+                 '4005728-8': {
+                     id: '4005728-8',
+                     type: 'Geografikum',
+                     name: 'Berlin',
+                     description: 'Berlin; -1948; 03.10.1990-'
+                 },
+                 '4033104-5': {
+                     id: '4033104-5',
+                     type: 'Geografikum',
+                     name: 'Hamburg',
+                     description: 'Freie und Hansestadt Hamburg'
+                 },
+                 '4041789-9': {
+                     id: '4041789-9',
+                     type: 'Geografikum',
+                     name: 'Köln',
+                     description: 'Stadt in Nordrhein-Westfalen'
+                 },
+                 'berlin': {
+                     id: '7501234-6',
+                     type: 'Geografikum',
+                     name: 'Berlin',
+                     description: 'Hauptstadt und Land der Bundesrepublik Deutschland'
+                 },
+                 'hamburg': {
+                     id: '4033104-5',
+                     type: 'Geografikum',
+                     name: 'Hamburg',
+                     description: 'Freie und Hansestadt Hamburg'
+                 },
+                 'köln': {
+                     id: '4041789-9',
+                     type: 'Geografikum',
+                     name: 'Köln',
+                     description: 'Stadt in Nordrhein-Westfalen'
+                 }
+             };
+
+             return searchData[searchValue.toLowerCase()] || null;
+         }
+
+         function addEntityToList(entity) {
+             // Prüfen, ob Entität bereits hinzugefügt wurde
+             if (linkedEntities.some(e => e.id === entity.id)) {
+                 alert('Diese Entität ist bereits hinzugefügt.');
+                 return;
+             }
+
+             linkedEntities.push(entity);
+             updateEntityList();
+         }
+
+         function removeEntityFromList(entityId) {
+             linkedEntities = linkedEntities.filter(e => e.id !== entityId);
+             updateEntityList();
+         }
+
+         function updateEntityList() {
+             const container = document.getElementById('entity-list');
+             
+             if (linkedEntities.length === 0) {
+                 container.innerHTML = '<div class="no-entities">Keine Entitäten hinzugefügt</div>';
+                 return;
+             }
+
+             container.innerHTML = '';
+             linkedEntities.forEach(entity => {
+                 const entityDiv = document.createElement('div');
+                 entityDiv.className = 'entity-item';
+                 entityDiv.innerHTML = `
+                     <div class="entity-item-info">
+                         <span class="entity-item-type">${entity.type}</span>
+                         <span class="entity-item-name">${entity.name}</span>
+                         <div class="entity-item-description">${entity.description}</div>
+                     </div>
+                     <div class="entity-item-actions">
+                         <button class="btn btn-outline btn-icon" onclick="removeEntityFromList('${entity.id}')" title="Entität entfernen">🗑️</button>
+                     </div>
+                 `;
+                 container.appendChild(entityDiv);
+             });
+         }
+
+        function toggleSection(sectionName) {
+            const content = document.getElementById(sectionName + '-content');
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('span');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                arrow.textContent = '▼';
+            } else {
+                content.classList.add('active');
+                arrow.textContent = '▲';
+            }
+        }
+
+                 function updateCoordinateForm() {
+             const coordinateType = document.getElementById('coordinate-type').value;
+             const relationType = document.getElementById('relation-type');
+             
+             // Alle Koordinatenformulare ausblenden
+             document.getElementById('point-coordinates').classList.add('hidden');
+             document.getElementById('line-coordinates').classList.add('hidden');
+             document.getElementById('polygon-coordinates').classList.add('hidden');
+             document.getElementById('bbox-coordinates').classList.add('hidden');
+             
+             // Relationstypen zurücksetzen
+             relationType.innerHTML = '<option value="">Bitte wählen...</option>';
+             
+             if (coordinateType) {
+                 // Passendes Formular anzeigen
+                 document.getElementById(coordinateType + '-coordinates').classList.remove('hidden');
+                 
+                 // Relationstypen füllen
+                 if (relationTypes[coordinateType]) {
+                     relationTypes[coordinateType].forEach(type => {
+                         const option = document.createElement('option');
+                         option.value = type;
+                         option.textContent = type;
+                         relationType.appendChild(option);
+                     });
+                 }
+                 
+                 // Karte aktualisieren
+                 setTimeout(() => {
+                     updateMapFromForm();
+                 }, 100);
+             }
+         }
+
+        function toggleInputMode() {
+            const inputMode = document.getElementById('coordinate-input-mode').value;
+            const structuredContainer = document.getElementById('structured-input-container');
+            const textContainer = document.getElementById('text-input-container');
+            
+            if (inputMode === 'structured') {
+                structuredContainer.classList.remove('hidden');
+                textContainer.classList.add('hidden');
+            } else {
+                structuredContainer.classList.add('hidden');
+                textContainer.classList.remove('hidden');
+            }
+        }
+
+        function updateTextFormat() {
+            const format = document.getElementById('coordinate-text-format').value;
+            const textInput = document.getElementById('coordinate-text-input');
+            
+            // Beispiele für verschiedene Formate
+            const examples = {
+                geojson: {
+                    point: '{"type": "Point", "coordinates": [13.4050, 52.5200]}',
+                    line: '{"type": "LineString", "coordinates": [[13.4050, 52.5200], [13.4150, 52.5300]]}',
+                    polygon: '{"type": "Polygon", "coordinates": [[[13.4050, 52.5200], [13.4150, 52.5200], [13.4150, 52.5300], [13.4050, 52.5300], [13.4050, 52.5200]]]}'
+                },
+                wkt: {
+                    point: 'POINT(13.4050 52.5200)',
+                    line: 'LINESTRING(13.4050 52.5200, 13.4150 52.5300)',
+                    polygon: 'POLYGON((13.4050 52.5200, 13.4150 52.5200, 13.4150 52.5300, 13.4050 52.5300, 13.4050 52.5200))'
+                },
+                gml: {
+                    point: '<gml:Point><gml:coordinates>13.4050,52.5200</gml:coordinates></gml:Point>',
+                    line: '<gml:LineString><gml:coordinates>13.4050,52.5200 13.4150,52.5300</gml:coordinates></gml:LineString>',
+                    polygon: '<gml:Polygon><gml:outerBoundaryIs><gml:LinearRing><gml:coordinates>13.4050,52.5200 13.4150,52.5200 13.4150,52.5300 13.4050,52.5300 13.4050,52.5200</gml:coordinates></gml:LinearRing></gml:outerBoundaryIs></gml:Polygon>'
+                },
+                kml: {
+                    point: '<Point><coordinates>13.4050,52.5200,0</coordinates></Point>',
+                    line: '<LineString><coordinates>13.4050,52.5200,0 13.4150,52.5300,0</coordinates></LineString>',
+                    polygon: '<Polygon><outerBoundaryIs><LinearRing><coordinates>13.4050,52.5200,0 13.4150,52.5200,0 13.4150,52.5300,0 13.4050,52.5300,0 13.4050,52.5200,0</coordinates></LinearRing></outerBoundaryIs></Polygon>'
+                }
+            };
+            
+            const coordinateType = document.getElementById('coordinate-type').value || 'point';
+            if (examples[format] && examples[format][coordinateType]) {
+                textInput.placeholder = `Beispiel für ${format.toUpperCase()} ${coordinateType}:\n${examples[format][coordinateType]}`;
+            }
+        }
+
+        function parseCoordinateText() {
+            const text = document.getElementById('coordinate-text-input').value.trim();
+            const format = document.getElementById('coordinate-text-format').value;
+            const resultDiv = document.getElementById('coordinate-validation-result');
+            
+            if (!text) {
+                showValidationResult('Bitte geben Sie Koordinaten ein.', 'error');
+                return;
+            }
+            
+            try {
+                let parsedData = null;
+                
+                switch (format) {
+                    case 'geojson':
+                        parsedData = parseGeoJSON(text);
+                        break;
+                    case 'wkt':
+                        parsedData = parseWKT(text);
+                        break;
+                    case 'gml':
+                        parsedData = parseGML(text);
+                        break;
+                    case 'kml':
+                        parsedData = parseKML(text);
+                        break;
+                    case 'custom':
+                        parsedData = parseCustom(text);
+                        break;
+                }
+                
+                if (parsedData) {
+                    showValidationResult(`✅ Koordinaten erfolgreich geparst!<br><strong>Typ:</strong> ${parsedData.type}<br><strong>Koordinaten:</strong> ${JSON.stringify(parsedData.coordinates)}`, 'success');
+                    // Automatisch den Koordinatentyp setzen
+                    document.getElementById('coordinate-type').value = parsedData.type;
+                    updateCoordinateForm();
+                } else {
+                    showValidationResult('❌ Koordinaten konnten nicht geparst werden. Bitte überprüfen Sie das Format.', 'error');
+                }
+            } catch (error) {
+                showValidationResult(`❌ Fehler beim Parsen: ${error.message}`, 'error');
+            }
+        }
+
+        function parseGeoJSON(text) {
+            const data = JSON.parse(text);
+            if (!data.type || !data.coordinates) {
+                throw new Error('Ungültiges GeoJSON-Format');
+            }
+            return {
+                type: data.type.toLowerCase().replace('linestring', 'line').replace('polygon', 'polygon'),
+                coordinates: data.coordinates
+            };
+        }
+
+        function parseWKT(text) {
+            // Einfache WKT-Parser (kann erweitert werden)
+            const pointMatch = text.match(/POINT\s*\(\s*([-\d.]+)\s+([-\d.]+)\s*\)/i);
+            if (pointMatch) {
+                return {
+                    type: 'point',
+                    coordinates: [parseFloat(pointMatch[2]), parseFloat(pointMatch[1])] // WKT: lon lat
+                };
+            }
+            
+            const lineMatch = text.match(/LINESTRING\s*\(\s*(.+?)\s*\)/i);
+            if (lineMatch) {
+                const coords = lineMatch[1].split(',').map(pair => {
+                    const [lon, lat] = pair.trim().split(/\s+/);
+                    return [parseFloat(lon), parseFloat(lat)];
+                });
+                return {
+                    type: 'line',
+                    coordinates: coords
+                };
+            }
+            
+            throw new Error('WKT-Format nicht unterstützt');
+        }
+
+        function parseGML(text) {
+            // Einfacher GML-Parser
+            const pointMatch = text.match(/<gml:coordinates>([^<]+)<\/gml:coordinates>/);
+            if (pointMatch) {
+                const coords = pointMatch[1].split(',').map(c => parseFloat(c.trim()));
+                return {
+                    type: 'point',
+                    coordinates: [coords[1], coords[0]] // GML: lat,lon
+                };
+            }
+            throw new Error('GML-Format nicht unterstützt');
+        }
+
+        function parseKML(text) {
+            // Einfacher KML-Parser
+            const coordMatch = text.match(/<coordinates>([^<]+)<\/coordinates>/);
+            if (coordMatch) {
+                const coords = coordMatch[1].split(/\s+/).map(pair => {
+                    const [lon, lat] = pair.split(',');
+                    return [parseFloat(lon), parseFloat(lat)];
+                });
+                return {
+                    type: coords.length === 1 ? 'point' : 'line',
+                    coordinates: coords
+                };
+            }
+            throw new Error('KML-Format nicht unterstützt');
+        }
+
+        function parseCustom(text) {
+            // Versucht verschiedene Formate zu erkennen
+            if (text.startsWith('{')) {
+                return parseGeoJSON(text);
+            } else if (text.match(/^(POINT|LINESTRING|POLYGON)/i)) {
+                return parseWKT(text);
+            } else if (text.includes('<gml:')) {
+                return parseGML(text);
+            } else if (text.includes('<coordinates>')) {
+                return parseKML(text);
+            }
+            throw new Error('Format nicht erkannt');
+        }
+
+        function showValidationResult(message, type) {
+            const resultDiv = document.getElementById('coordinate-validation-result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            resultDiv.classList.remove('hidden');
+        }
+
+        function clearCoordinateText() {
+            document.getElementById('coordinate-text-input').value = '';
+            document.getElementById('coordinate-validation-result').classList.add('hidden');
+        }
+
+        function addPoint(containerId) {
+            const container = document.getElementById(containerId);
+            const pointDiv = document.createElement('div');
+            pointDiv.className = 'point-input';
+            pointDiv.innerHTML = `
+                <input type="number" step="any" placeholder="Breitengrad">
+                <span>°N</span>
+                <input type="number" step="any" placeholder="Längengrad">
+                <span>°E</span>
+                <button onclick="removePoint(this)">Entfernen</button>
+            `;
+            container.appendChild(pointDiv);
+        }
+
+        function removePoint(button) {
+            const container = button.parentElement.parentElement;
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+                 function saveGeoInfo() {
+             // Validierung der verknüpften Entitäten
+             if (linkedEntities.length === 0) {
+                 alert('Bitte fügen Sie mindestens eine GND-Entität hinzu.');
+                 return;
+             }
+
+             // Hier würde die Logik zum Speichern der Geoinformationen implementiert
+             const entityNames = linkedEntities.map(e => e.name).join(', ');
+             alert(`Geoinformation wurde erfolgreich gespeichert!\nVerknüpfte Entitäten: ${entityNames}`);
+             resetForm();
+             loadExistingGeoInfo();
+         }
+
+                 function resetForm() {
+             document.getElementById('geo-form').reset();
+             document.getElementById('coordinate-type').value = '';
+             document.getElementById('coordinate-input-mode').value = 'structured';
+             document.getElementById('coordinate-text-input').value = '';
+             document.getElementById('coordinate-validation-result').classList.add('hidden');
+             
+             // Entitätsliste zurücksetzen
+             linkedEntities = [];
+             updateEntityList();
+             
+             updateCoordinateForm();
+             toggleInputMode();
+         }
+
+        function loadExistingGeoInfo() {
+            const container = document.getElementById('existing-geo-list');
+            container.innerHTML = '';
+            
+            existingGeoInfo.forEach(geo => {
+                const geoItem = document.createElement('div');
+                geoItem.className = 'geo-item';
+                
+                let coordinateText = '';
+                switch (geo.type) {
+                    case 'point':
+                        coordinateText = `${geo.coordinates.lat}°N, ${geo.coordinates.lon}°E`;
+                        break;
+                    case 'bbox':
+                        coordinateText = `N: ${geo.coordinates.north}°, E: ${geo.coordinates.east}°, S: ${geo.coordinates.south}°, W: ${geo.coordinates.west}°`;
+                        break;
+                }
+                
+                geoItem.innerHTML = `
+                    <div class="geo-item-header">
+                        <div class="geo-item-title">${geo.relationType}</div>
+                        <div class="geo-item-actions">
+                            <button class="btn btn-outline btn-icon" onclick="editGeoInfo(${geo.id})">✏️</button>
+                            <button class="btn btn-outline btn-icon" onclick="deleteGeoInfo(${geo.id})">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="geo-item-content">
+                        <div class="geo-item-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Koordinatentyp</div>
+                                <div class="detail-value">${geo.type}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Relationstyp</div>
+                                <div class="detail-value">${geo.relationType}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Zeitraum</div>
+                                <div class="detail-value">${geo.startDate} - ${geo.endDate || 'heute'}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Quelle</div>
+                                <div class="detail-value">${geo.source}</div>
+                            </div>
+                        </div>
+                        <div class="coordinate-display">${coordinateText}</div>
+                        ${geo.remarks ? `<div style="margin-top: 1rem;"><strong>Bemerkungen:</strong> ${geo.remarks}</div>` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(geoItem);
+            });
+        }
+
+        function editGeoInfo(id) {
+            // Hier würde die Logik zum Bearbeiten implementiert
+            alert(`Geoinformation ${id} bearbeiten`);
+        }
+
+                 function deleteGeoInfo(id) {
+             if (confirm('Möchten Sie diese Geoinformation wirklich löschen?')) {
+                 // Hier würde die Logik zum Löschen implementiert
+                 alert(`Geoinformation ${id} wurde gelöscht`);
+                 loadExistingGeoInfo();
+             }
+         }
+
+         // Map-Funktionen
+                   function initMap() {
+              if (!map) {
+                  map = L.map('map').setView([51.505, -0.09], 13);
+                  
+                  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                      attribution: '© OpenStreetMap contributors'
+                  }).addTo(map);
+                  
+                  // Polygonsymbol als Kartensteuerung hinzufügen
+                  const polygonControl = L.Control.extend({
+                      options: {
+                          position: 'topleft'
+                      },
+                      
+                      onAdd: function(map) {
+                          const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                          const button = L.DomUtil.create('a', 'leaflet-control-zoom-in', container);
+                          button.innerHTML = '⬟';
+                          button.title = 'Koordinaten durch Klicken setzen';
+                          button.style.fontSize = '18px';
+                          button.style.fontWeight = 'bold';
+                          button.style.color = '#2c5aa0';
+                          
+                          L.DomEvent.on(button, 'click', function(e) {
+                              L.DomEvent.stopPropagation(e);
+                              L.DomEvent.preventDefault(e);
+                              toggleMapInput();
+                          });
+                          
+                          return container;
+                      }
+                  });
+                  
+                  map.addControl(new polygonControl());
+              }
+          }
+
+         function clearMapElements() {
+             if (!map) return;
+             
+             // Alle bestehenden Elemente entfernen
+             currentMarkers.forEach(marker => map.removeLayer(marker));
+             currentLines.forEach(line => map.removeLayer(line));
+             currentPolygons.forEach(polygon => map.removeLayer(polygon));
+             currentRectangles.forEach(rectangle => map.removeLayer(rectangle));
+             
+             currentMarkers = [];
+             currentLines = [];
+             currentPolygons = [];
+             currentRectangles = [];
+         }
+
+         
+
+                   function toggleMapInput() {
+              mapInputMode = !mapInputMode;
+              
+              // Polygonsymbol visuell aktualisieren
+              const polygonButton = document.querySelector('.leaflet-control-zoom-in');
+              if (polygonButton) {
+                  if (mapInputMode) {
+                      polygonButton.style.backgroundColor = '#2c5aa0';
+                      polygonButton.style.color = 'white';
+                      polygonButton.title = 'Klick-Modus deaktivieren';
+                  } else {
+                      polygonButton.style.backgroundColor = '';
+                      polygonButton.style.color = '#2c5aa0';
+                      polygonButton.title = 'Koordinaten durch Klicken setzen';
+                  }
+              }
+              
+              if (mapInputMode) {
+                  // Klick-Event hinzufügen
+                  map.on('click', onMapClick);
+                  map.getContainer().style.cursor = 'crosshair';
+              } else {
+                  // Klick-Event entfernen
+                  map.off('click', onMapClick);
+                  map.getContainer().style.cursor = '';
+              }
+          }
+
+         function onMapClick(e) {
+             if (!mapInputMode) return;
+             
+             const lat = e.latlng.lat;
+             const lng = e.latlng.lng;
+             
+             // Koordinatentyp ermitteln
+             const coordinateType = document.getElementById('coordinate-type').value;
+             
+             switch (coordinateType) {
+                 case 'point':
+                     addPointFromMap(lat, lng);
+                     break;
+                 case 'line':
+                     addLinePointFromMap(lat, lng);
+                     break;
+                 case 'polygon':
+                     addPolygonPointFromMap(lat, lng);
+                     break;
+                 case 'bbox':
+                     addBboxPointFromMap(lat, lng);
+                     break;
+                 default:
+                     // Standardmäßig Punkt hinzufügen
+                     addPointFromMap(lat, lng);
+                     break;
+             }
+             
+             // Karte aktualisieren
+             updateMapFromForm();
+         }
+
+         function addPointFromMap(lat, lng) {
+             document.getElementById('point-lat').value = lat.toFixed(6);
+             document.getElementById('point-lon').value = lng.toFixed(6);
+         }
+
+         function addLinePointFromMap(lat, lng) {
+             const container = document.getElementById('line-points');
+             const pointDiv = document.createElement('div');
+             pointDiv.className = 'point-input';
+             pointDiv.innerHTML = `
+                 <input type="number" step="any" value="${lat.toFixed(6)}" placeholder="Breitengrad">
+                 <span>°N</span>
+                 <input type="number" step="any" value="${lng.toFixed(6)}" placeholder="Längengrad">
+                 <span>°E</span>
+                 <button onclick="removePoint(this)">Entfernen</button>
+             `;
+             container.appendChild(pointDiv);
+         }
+
+         function addPolygonPointFromMap(lat, lng) {
+             const container = document.getElementById('polygon-points');
+             const pointDiv = document.createElement('div');
+             pointDiv.className = 'point-input';
+             pointDiv.innerHTML = `
+                 <input type="number" step="any" value="${lat.toFixed(6)}" placeholder="Breitengrad">
+                 <span>°N</span>
+                 <input type="number" step="any" value="${lng.toFixed(6)}" placeholder="Längengrad">
+                 <span>°E</span>
+                 <button onclick="removePoint(this)">Entfernen</button>
+             `;
+             container.appendChild(pointDiv);
+         }
+
+         function addBboxPointFromMap(lat, lng) {
+             // Für Bounding Box: Ersten Klick als Nord-West, zweiten als Süd-Ost
+             const northField = document.getElementById('bbox-north');
+             const eastField = document.getElementById('bbox-east');
+             const southField = document.getElementById('bbox-south');
+             const westField = document.getElementById('bbox-west');
+             
+             if (!northField.value && !eastField.value && !southField.value && !westField.value) {
+                 // Erster Klick - Nord-West Ecke
+                 northField.value = lat.toFixed(6);
+                 westField.value = lng.toFixed(6);
+             } else if (northField.value && westField.value && !southField.value && !eastField.value) {
+                 // Zweiter Klick - Süd-Ost Ecke
+                 southField.value = lat.toFixed(6);
+                 eastField.value = lng.toFixed(6);
+             } else {
+                 // Reset und neuer erster Klick
+                 northField.value = lat.toFixed(6);
+                 westField.value = lng.toFixed(6);
+                 southField.value = '';
+                 eastField.value = '';
+             }
+         }
+
+         function updateMapFromForm() {
+             if (!map) return;
+             
+             clearMapElements();
+             
+             const coordinateType = document.getElementById('coordinate-type').value;
+             
+             switch (coordinateType) {
+                 case 'point':
+                     updateMapFromPoint();
+                     break;
+                 case 'line':
+                     updateMapFromLine();
+                     break;
+                 case 'polygon':
+                     updateMapFromPolygon();
+                     break;
+                 case 'bbox':
+                     updateMapFromBbox();
+                     break;
+             }
+         }
+
+         function updateMapFromPoint() {
+             const lat = parseFloat(document.getElementById('point-lat').value);
+             const lon = parseFloat(document.getElementById('point-lon').value);
+             
+             if (!isNaN(lat) && !isNaN(lon)) {
+                 const marker = L.marker([lat, lon], {draggable: true}).addTo(map);
+                 marker.bindPopup(`Punkt: ${lat}°N, ${lon}°E`).openPopup();
+                 
+                 // Event-Listener für das Verschieben hinzufügen
+                 marker.on('dragend', function(e) {
+                     const newLat = e.target.getLatLng().lat;
+                     const newLng = e.target.getLatLng().lng;
+                     
+                     // Formularfelder aktualisieren
+                     document.getElementById('point-lat').value = newLat.toFixed(6);
+                     document.getElementById('point-lon').value = newLng.toFixed(6);
+                     
+                     // Popup aktualisieren
+                     marker.bindPopup(`Punkt: ${newLat.toFixed(6)}°N, ${newLng.toFixed(6)}°E`);
+                 });
+                 
+                 // Visueller Hinweis beim Hover
+                 marker.on('mouseover', function() {
+                     this.getElement().style.cursor = 'grab';
+                 });
+                 
+                 marker.on('mousedown', function() {
+                     this.getElement().style.cursor = 'grabbing';
+                 });
+                 
+                 marker.on('mouseup', function() {
+                     this.getElement().style.cursor = 'grab';
+                 });
+                 
+                 currentMarkers.push(marker);
+                 map.setView([lat, lon], 13);
+             }
+         }
+
+                   function updateMapFromLine() {
+              const points = [];
+              const pointInputs = document.querySelectorAll('#line-points .point-input');
+              
+              // Alle bestehenden Elemente entfernen
+              currentMarkers.forEach(marker => map.removeLayer(marker));
+              currentLines.forEach(line => map.removeLayer(line));
+              currentMarkers = [];
+              currentLines = [];
+              
+              pointInputs.forEach((pointInput, index) => {
+                  const inputs = pointInput.querySelectorAll('input[type="number"]');
+                  const lat = parseFloat(inputs[0].value);
+                  const lon = parseFloat(inputs[1].value);
+                  
+                  if (!isNaN(lat) && !isNaN(lon)) {
+                      points.push([lat, lon]);
+                      
+                      // Verschiebbaren Marker für jeden Punkt hinzufügen
+                      const marker = L.marker([lat, lon], {draggable: true}).addTo(map);
+                      marker.bindPopup(`Punkt ${index + 1}: ${lat.toFixed(6)}°N, ${lon.toFixed(6)}°E`);
+                      
+                      // Event-Listener für das Verschieben hinzufügen
+                      marker.on('dragend', function(e) {
+                          const newLat = e.target.getLatLng().lat;
+                          const newLng = e.target.getLatLng().lng;
+                          
+                          // Formularfelder aktualisieren
+                          inputs[0].value = newLat.toFixed(6);
+                          inputs[1].value = newLng.toFixed(6);
+                          
+                          // Popup aktualisieren
+                          marker.bindPopup(`Punkt ${index + 1}: ${newLat.toFixed(6)}°N, ${newLng.toFixed(6)}°E`);
+                          
+                          // Linie neu zeichnen
+                          updateMapFromLine();
+                      });
+                      
+                      currentMarkers.push(marker);
+                  }
+              });
+              
+              if (points.length >= 2) {
+                  const line = L.polyline(points, {color: 'red'}).addTo(map);
+                  currentLines.push(line);
+                  map.fitBounds(line.getBounds());
+              }
+          }
+
+                   function updateMapFromPolygon() {
+              const points = [];
+              const pointInputs = document.querySelectorAll('#polygon-points .point-input');
+              
+              // Alle bestehenden Elemente entfernen
+              currentMarkers.forEach(marker => map.removeLayer(marker));
+              currentPolygons.forEach(polygon => map.removeLayer(polygon));
+              currentMarkers = [];
+              currentPolygons = [];
+              
+              pointInputs.forEach((pointInput, index) => {
+                  const inputs = pointInput.querySelectorAll('input[type="number"]');
+                  const lat = parseFloat(inputs[0].value);
+                  const lon = parseFloat(inputs[1].value);
+                  
+                  if (!isNaN(lat) && !isNaN(lon)) {
+                      points.push([lat, lon]);
+                      
+                      // Verschiebbaren Marker für jeden Punkt hinzufügen
+                      const marker = L.marker([lat, lon], {draggable: true}).addTo(map);
+                      marker.bindPopup(`Punkt ${index + 1}: ${lat.toFixed(6)}°N, ${lon.toFixed(6)}°E`);
+                      
+                      // Event-Listener für das Verschieben hinzufügen
+                      marker.on('dragend', function(e) {
+                          const newLat = e.target.getLatLng().lat;
+                          const newLng = e.target.getLatLng().lng;
+                          
+                          // Formularfelder aktualisieren
+                          inputs[0].value = newLat.toFixed(6);
+                          inputs[1].value = newLng.toFixed(6);
+                          
+                          // Popup aktualisieren
+                          marker.bindPopup(`Punkt ${index + 1}: ${newLat.toFixed(6)}°N, ${newLng.toFixed(6)}°E`);
+                          
+                          // Polygon neu zeichnen
+                          updateMapFromPolygon();
+                      });
+                      
+                      currentMarkers.push(marker);
+                  }
+              });
+              
+              if (points.length >= 3) {
+                  const polygon = L.polygon(points, {color: 'blue', fillOpacity: 0.3}).addTo(map);
+                  currentPolygons.push(polygon);
+                  map.fitBounds(polygon.getBounds());
+              }
+          }
+
+         function updateMapFromBbox() {
+             const north = parseFloat(document.getElementById('bbox-north').value);
+             const east = parseFloat(document.getElementById('bbox-east').value);
+             const south = parseFloat(document.getElementById('bbox-south').value);
+             const west = parseFloat(document.getElementById('bbox-west').value);
+             
+             if (!isNaN(north) && !isNaN(east) && !isNaN(south) && !isNaN(west)) {
+                 const bounds = [[south, west], [north, east]];
+                 const rectangle = L.rectangle(bounds, {color: 'green', fillOpacity: 0.2}).addTo(map);
+                 currentRectangles.push(rectangle);
+                 map.fitBounds(bounds);
+             }
+         }
+
+                 // Initialisierung
+         document.addEventListener('DOMContentLoaded', function() {
+             // Standardmäßig erste beiden Sektionen öffnen
+             toggleSection('entities');
+             toggleSection('coordinates');
+             
+             // Karte initialisieren
+             initMap();
+             
+             // Event-Listener für Eingabefelder hinzufügen
+             addInputEventListeners();
+             
+             // Prüfen, ob eine GND-Nummer in der URL übergeben wurde
+             const urlParams = new URLSearchParams(window.location.search);
+             const gndNumber = urlParams.get('gnd');
+             
+             if (gndNumber) {
+                 // GND-Nummer ist vorhanden, Entität laden
+                 loadEntityByGndNumber(gndNumber);
+             }
+         });
+
+         function addInputEventListeners() {
+             // Punktkoordinaten
+             document.getElementById('point-lat').addEventListener('input', updateMapFromForm);
+             document.getElementById('point-lon').addEventListener('input', updateMapFromForm);
+             
+             // Bounding Box
+             document.getElementById('bbox-north').addEventListener('input', updateMapFromForm);
+             document.getElementById('bbox-east').addEventListener('input', updateMapFromForm);
+             document.getElementById('bbox-south').addEventListener('input', updateMapFromForm);
+             document.getElementById('bbox-west').addEventListener('input', updateMapFromForm);
+             
+             // Event-Listener für dynamisch hinzugefügte Eingabefelder
+             document.addEventListener('input', function(e) {
+                 if (e.target.matches('#line-points input, #polygon-points input')) {
+                     updateMapFromForm();
+                 }
+             });
+         }
+        
+        function loadEntityByGndNumber(gndNumber) {
+            // Hier würde normalerweise ein API-Call gemacht werden
+            // Für das Prototyp verwenden wir Beispieldaten
+            
+            // Beispieldaten für verschiedene GND-Nummern
+            const entityData = {
+                '4005728-8': {
+                    type: 'Geografikum',
+                    name: 'Berlin',
+                    description: 'Berlin; -1948; 03.10.1990-'
+                },
+                '4033104-5': {
+                    type: 'Geografikum',
+                    name: 'Hamburg',
+                    description: 'Freie und Hansestadt Hamburg'
+                },
+                '4041789-9': {
+                    type: 'Geografikum',
+                    name: 'Köln',
+                    description: 'Stadt in Nordrhein-Westfalen'
+                }
+            };
+            
+            const entity = entityData[gndNumber] || {
+                type: 'Geografikum',
+                name: `GND ${gndNumber}`,
+                description: 'Entität aus der GND-Datenbank'
+            };
+            
+                         // Formular anzeigen
+             document.getElementById('geo-form').style.display = 'block';
+             
+             // Erste Entität automatisch zur Liste hinzufügen
+             linkedEntities = [entity];
+             updateEntityList();
+             
+             // Vorhandene Geoinformationen laden
+             loadExistingGeoInfo();
+        }
+    </script>
+</body>
+</html>
