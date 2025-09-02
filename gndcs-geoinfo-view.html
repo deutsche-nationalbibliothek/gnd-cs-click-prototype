@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geoinformation anzeigen - GND Community Space</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: #2c5aa0;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-left: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c5aa0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-section a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem 0;
+        }
+
+        .breadcrumb-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-breadcrumb a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            color: #2c5aa0;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .geo-info-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .info-section {
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            color: #2c5aa0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: #2c5aa0;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #2c5aa0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .info-value.empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .entity-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .entity-item {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #1976d2;
+        }
+
+        .entity-item .entity-type {
+            background: #2196f3;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-right: 0.5rem;
+        }
+
+        .coordinate-display {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            margin-top: 1rem;
+        }
+
+        .map-container {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 500px;
+            margin-top: 1rem;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3f6b;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+
+        .btn-outline:hover {
+            background: #2c5aa0;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #f5c6cb;
+            margin: 1rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="gndcs-welcome.html">
+                    <div class="logo">GND</div>
+                    <h1>Community Space</h1>
+                </a>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">MS</div>
+                    <span>Maria Schmidt</span>
+                </div>
+                <a href="#" class="btn btn-secondary">Abmelden</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="breadcrumb-bar">
+        <div class="breadcrumb-content">
+            <div class="nav-breadcrumb">
+                <a href="gndcs-welcome.html">Startseite</a>
+                <span>›</span>
+                <a href="gndcs-dashboard.html">Dashboard</a>
+                <span>›</span>
+                <a href="gndcs-edit.html">Entität bearbeiten</a>
+                <span>›</span>
+                <span>Geoinformation anzeigen</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h2>🌍 Geoinformation anzeigen</h2>
+            <p>Details der ausgewählten Geoinformation</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <h3>Lade Geoinformation...</h3>
+            <p>Bitte warten Sie einen Moment.</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error" class="error hidden">
+            <h3>Fehler beim Laden</h3>
+            <p id="error-message">Die Geoinformation konnte nicht geladen werden.</p>
+        </div>
+
+        <!-- Geo Information Container -->
+        <div id="geo-info-container" class="geo-info-container hidden">
+            <!-- GND-Entitäten -->
+            <div class="info-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">🏛️</div>
+                        Verknüpfte GND-Entitäten
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="entities-list" class="entity-list">
+                        <!-- Wird dynamisch gefüllt -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Koordinaten -->
+            <div class="info-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">📍</div>
+                        Koordinaten
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Koordinatentyp</div>
+                            <div class="info-value" id="coordinate-type">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Relationstyp</div>
+                            <div class="info-value" id="relation-type">-</div>
+                        </div>
+                    </div>
+                    <div class="coordinate-display" id="coordinate-display">
+                        <!-- Koordinaten werden hier angezeigt -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Karte -->
+            <div class="info-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">🗺️</div>
+                        Geografische Darstellung
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datierung -->
+            <div class="info-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">📅</div>
+                        Koordinatendatierung
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Anfangsdatum</div>
+                            <div class="info-value" id="start-date">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Enddatum</div>
+                            <div class="info-value" id="end-date">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Verbale Datierung</div>
+                            <div class="info-value" id="verbal-dating">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zusatzinformationen -->
+            <div class="info-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">📝</div>
+                        Zusatzinformationen
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Quelle</div>
+                            <div class="info-value" id="source">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Bemerkungen</div>
+                            <div class="info-value" id="remarks">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metadaten -->
+            <div class="info-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <div class="section-icon">🔍</div>
+                        Metadaten
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Erstellungsdatum</div>
+                            <div class="info-value" id="created-date">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Änderungsdatum</div>
+                            <div class="info-value" id="modified-date">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Erstellender Bearbeiter</div>
+                            <div class="info-value" id="created-by">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Letzter Bearbeiter</div>
+                            <div class="info-value" id="modified-by">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge status-active" id="status">Aktiv</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aktions-Buttons -->
+            <div class="section-content">
+                <div class="action-buttons">
+                    <button class="btn btn-outline" onclick="editGeoInfo()">Bearbeiten</button>
+                    <button class="btn btn-primary" onclick="goBack()">Zurück</button>
+                    <button class="btn btn-secondary" onclick="deleteGeoInfo()">Löschen</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Map-Variablen
+        let map = null;
+        let currentGeoInfo = null;
+
+        // Beispieldaten für verschiedene Geoinformationen
+        const geoInfoDatabase = {
+            'geo-001': {
+                id: 'geo-001',
+                entities: [
+                    {
+                        id: '4005728-8',
+                        type: 'Geografikum',
+                        name: 'Berlin',
+                        description: 'Berlin; -1948; 03.10.1990-'
+                    }
+                ],
+                coordinateType: 'point',
+                coordinates: {
+                    lat: 52.5200,
+                    lon: 13.4050
+                },
+                relationType: 'Zentrum',
+                startDate: '1990-10-03',
+                endDate: null,
+                startApproximate: false,
+                endApproximate: false,
+                verbalDating: 'Seit der deutschen Wiedervereinigung',
+                source: 'OpenStreetMap',
+                remarks: 'Koordinaten des Berliner Zentrums',
+                createdDate: '2024-01-15T10:30:00Z',
+                modifiedDate: '2024-01-15T10:30:00Z',
+                createdBy: 'Maria Schmidt',
+                modifiedBy: 'Maria Schmidt',
+                status: 'active'
+            },
+            'geo-002': {
+                id: 'geo-002',
+                entities: [
+                    {
+                        id: '4033104-5',
+                        type: 'Geografikum',
+                        name: 'Hamburg',
+                        description: 'Freie und Hansestadt Hamburg'
+                    }
+                ],
+                coordinateType: 'bbox',
+                coordinates: {
+                    north: 53.9942,
+                    east: 10.2292,
+                    south: 53.3956,
+                    west: 9.7320
+                },
+                relationType: 'Rahmenkoordinaten',
+                startDate: '1990-10-03',
+                endDate: null,
+                startApproximate: false,
+                endApproximate: false,
+                verbalDating: 'Moderne Zeit',
+                source: 'GADM Database',
+                remarks: 'Bounding Box der Freien und Hansestadt Hamburg',
+                createdDate: '2024-01-10T14:20:00Z',
+                modifiedDate: '2024-01-12T09:15:00Z',
+                createdBy: 'Hans Mueller',
+                modifiedBy: 'Maria Schmidt',
+                status: 'active'
+            },
+            'geo-003': {
+                id: 'geo-003',
+                entities: [
+                    {
+                        id: '4041789-9',
+                        type: 'Geografikum',
+                        name: 'Köln',
+                        description: 'Stadt in Nordrhein-Westfalen'
+                    }
+                ],
+                coordinateType: 'polygon',
+                coordinates: [
+                    [50.9375, 6.9531],
+                    [50.9375, 7.0313],
+                    [50.8750, 7.0313],
+                    [50.8750, 6.9531],
+                    [50.9375, 6.9531]
+                ],
+                relationType: 'Umriss',
+                startDate: '1990-10-03',
+                endDate: null,
+                startApproximate: false,
+                endApproximate: false,
+                verbalDating: 'Gegenwart',
+                source: 'Stadt Köln',
+                remarks: 'Geschätzter Umriss der Kölner Innenstadt',
+                createdDate: '2024-01-08T16:45:00Z',
+                modifiedDate: '2024-01-08T16:45:00Z',
+                createdBy: 'Anna Weber',
+                modifiedBy: 'Anna Weber',
+                status: 'active'
+            }
+        };
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            // Geo-ID aus der URL extrahieren
+            const geoId = getGeoIdFromUrl();
+            
+            if (geoId) {
+                loadGeoInfo(geoId);
+            } else {
+                showError('Keine Geo-ID in der URL gefunden.');
+            }
+        });
+
+        function getGeoIdFromUrl() {
+            // URL-Parameter auslesen
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+                 function loadGeoInfo(geoId) {
+             // Simuliere API-Call
+             setTimeout(() => {
+                 let geoInfo = geoInfoDatabase[geoId];
+                 
+                 // Falls die ID nicht in der Datenbank existiert, generiere eine neue Geoinformation
+                 if (!geoInfo && geoId.startsWith('geo-')) {
+                     geoInfo = generateNewGeoInfo(geoId);
+                 }
+                 
+                 if (geoInfo) {
+                     currentGeoInfo = geoInfo;
+                     displayGeoInfo(geoInfo);
+                     initMap();
+                     displayCoordinatesOnMap(geoInfo);
+                 } else {
+                     showError(`Geoinformation mit der ID '${geoId}' wurde nicht gefunden.`);
+                 }
+             }, 1000);
+         }
+
+         function generateNewGeoInfo(geoId) {
+             // Generiere eine neue Geoinformation basierend auf der aktuellen Zeit
+             const now = new Date();
+             const timestamp = now.toISOString();
+             
+             return {
+                 id: geoId,
+                 entities: [
+                     {
+                         id: '4005728-8',
+                         type: 'Geografikum',
+                         name: 'Berlin',
+                         description: 'Berlin; -1948; 03.10.1990-'
+                     }
+                 ],
+                 coordinateType: 'point',
+                 coordinates: {
+                     lat: 52.5200,
+                     lon: 13.4050
+                 },
+                 relationType: 'Zentrum',
+                 startDate: '1990-10-03',
+                 endDate: null,
+                 startApproximate: false,
+                 endApproximate: false,
+                 verbalDating: 'Seit der deutschen Wiedervereinigung',
+                 source: 'OpenStreetMap',
+                 remarks: 'Koordinaten des Berliner Zentrums',
+                 createdDate: timestamp,
+                 modifiedDate: timestamp,
+                 createdBy: 'Maria Schmidt',
+                 modifiedBy: 'Maria Schmidt',
+                 status: 'active'
+             };
+         }
+
+        function displayGeoInfo(geoInfo) {
+            // Loading ausblenden
+            document.getElementById('loading').classList.add('hidden');
+            
+            // Container anzeigen
+            document.getElementById('geo-info-container').classList.remove('hidden');
+
+            // Entitäten anzeigen
+            displayEntities(geoInfo.entities);
+
+            // Koordinaten anzeigen
+            document.getElementById('coordinate-type').textContent = getCoordinateTypeName(geoInfo.coordinateType);
+            document.getElementById('relation-type').textContent = geoInfo.relationType || '-';
+            displayCoordinates(geoInfo);
+
+            // Datierung anzeigen
+            document.getElementById('start-date').textContent = formatDate(geoInfo.startDate);
+            document.getElementById('end-date').textContent = formatDate(geoInfo.endDate);
+            document.getElementById('verbal-dating').textContent = geoInfo.verbalDating || '-';
+
+            // Zusatzinformationen anzeigen
+            document.getElementById('source').textContent = geoInfo.source || '-';
+            document.getElementById('remarks').textContent = geoInfo.remarks || '-';
+
+            // Metadaten anzeigen
+            document.getElementById('created-date').textContent = formatDateTime(geoInfo.createdDate);
+            document.getElementById('modified-date').textContent = formatDateTime(geoInfo.modifiedDate);
+            document.getElementById('created-by').textContent = geoInfo.createdBy || '-';
+            document.getElementById('modified-by').textContent = geoInfo.modifiedBy || '-';
+
+            // Status anzeigen
+            updateStatus(geoInfo.status);
+        }
+
+        function displayEntities(entities) {
+            const container = document.getElementById('entities-list');
+            container.innerHTML = '';
+
+            entities.forEach(entity => {
+                const entityDiv = document.createElement('div');
+                entityDiv.className = 'entity-item';
+                entityDiv.innerHTML = `
+                    <span class="entity-type">${entity.type}</span>
+                    <strong>${entity.name}</strong>
+                    <div style="margin-top: 0.25rem; font-size: 0.8rem; opacity: 0.8;">
+                        ${entity.description}
+                    </div>
+                `;
+                container.appendChild(entityDiv);
+            });
+        }
+
+        function displayCoordinates(geoInfo) {
+            const container = document.getElementById('coordinate-display');
+            let coordinateText = '';
+
+            switch (geoInfo.coordinateType) {
+                case 'point':
+                    coordinateText = `Punkt: ${geoInfo.coordinates.lat}°N, ${geoInfo.coordinates.lon}°E`;
+                    break;
+                case 'line':
+                    coordinateText = `Linie mit ${geoInfo.coordinates.length} Punkten`;
+                    break;
+                case 'polygon':
+                    coordinateText = `Polygon mit ${geoInfo.coordinates.length} Punkten`;
+                    break;
+                case 'bbox':
+                    coordinateText = `Bounding Box: N: ${geoInfo.coordinates.north}°, E: ${geoInfo.coordinates.east}°, S: ${geoInfo.coordinates.south}°, W: ${geoInfo.coordinates.west}°`;
+                    break;
+                default:
+                    coordinateText = 'Koordinaten nicht verfügbar';
+            }
+
+            container.textContent = coordinateText;
+        }
+
+        function getCoordinateTypeName(type) {
+            const typeNames = {
+                'point': 'Punktkoordinaten',
+                'line': 'Linien',
+                'polygon': 'Flächen (Multipolygon)',
+                'bbox': 'Rahmenkoordinaten (Bounding Box)'
+            };
+            return typeNames[type] || type;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('de-DE');
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return '-';
+            try {
+                const date = new Date(dateTimeString);
+                return date.toLocaleString('de-DE');
+            } catch (e) {
+                return dateTimeString;
+            }
+        }
+
+        function updateStatus(status) {
+            const statusElement = document.getElementById('status');
+            if (status === 'active') {
+                statusElement.className = 'status-badge status-active';
+                statusElement.textContent = 'Aktiv';
+            } else {
+                statusElement.className = 'status-badge status-inactive';
+                statusElement.textContent = 'Inaktiv';
+            }
+        }
+
+        function initMap() {
+            if (!map) {
+                map = L.map('map').setView([51.505, -0.09], 13);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+            }
+        }
+
+        function displayCoordinatesOnMap(geoInfo) {
+            if (!map) return;
+
+            // Karte leeren
+            map.eachLayer((layer) => {
+                if (layer instanceof L.TileLayer) return;
+                map.removeLayer(layer);
+            });
+
+            switch (geoInfo.coordinateType) {
+                case 'point':
+                    const marker = L.marker([geoInfo.coordinates.lat, geoInfo.coordinates.lon]).addTo(map);
+                    marker.bindPopup(`Punkt: ${geoInfo.coordinates.lat}°N, ${geoInfo.coordinates.lon}°E`).openPopup();
+                    map.setView([geoInfo.coordinates.lat, geoInfo.coordinates.lon], 13);
+                    break;
+
+                case 'line':
+                    if (geoInfo.coordinates.length >= 2) {
+                        const line = L.polyline(geoInfo.coordinates, {color: 'red'}).addTo(map);
+                        map.fitBounds(line.getBounds());
+                    }
+                    break;
+
+                case 'polygon':
+                    if (geoInfo.coordinates.length >= 3) {
+                        const polygon = L.polygon(geoInfo.coordinates, {color: 'blue', fillOpacity: 0.3}).addTo(map);
+                        map.fitBounds(polygon.getBounds());
+                    }
+                    break;
+
+                case 'bbox':
+                    const bounds = [
+                        [geoInfo.coordinates.south, geoInfo.coordinates.west],
+                        [geoInfo.coordinates.north, geoInfo.coordinates.east]
+                    ];
+                    const rectangle = L.rectangle(bounds, {color: 'green', fillOpacity: 0.2}).addTo(map);
+                    map.fitBounds(bounds);
+                    break;
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+            document.getElementById('error-message').textContent = message;
+        }
+
+        function editGeoInfo() {
+            if (currentGeoInfo) {
+                // Zur Bearbeitungsseite weiterleiten
+                window.location.href = `gndcs-geoinfo.html?id=${currentGeoInfo.id}&mode=edit`;
+            }
+        }
+
+        function goBack() {
+            // Zurück zur vorherigen Seite
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'gndcs-dashboard.html';
+            }
+        }
+
+        function deleteGeoInfo() {
+            if (currentGeoInfo && confirm(`Möchten Sie die Geoinformation '${currentGeoInfo.id}' wirklich löschen?`)) {
+                // Hier würde die Löschlogik implementiert
+                alert('Geoinformation wurde gelöscht.');
+                goBack();
+            }
+        }
+    </script>
+</body>
+</html>
