@@ -1440,10 +1440,20 @@
              }
 
              // Hier würde die Logik zum Speichern der Geoinformationen implementiert
+             // Für das Prototyp generieren wir eine neue Geo-ID
+             const newGeoId = 'geo-' + Date.now();
+             
+             // Erfolgsmeldung anzeigen
              const entityNames = linkedEntities.map(e => e.name).join(', ');
-             alert(`Geoinformation wurde erfolgreich gespeichert!\nVerknüpfte Entitäten: ${entityNames}`);
-             resetForm();
-             loadExistingGeoInfo();
+             
+             if (confirm(`Geoinformation wurde erfolgreich gespeichert!\nVerknüpfte Entitäten: ${entityNames}\n\nMöchten Sie die gespeicherte Geoinformation anzeigen?`)) {
+                 // Zur Anzeigeseite weiterleiten
+                 window.location.href = `gndcs-geoinfo-view.html?id=${newGeoId}`;
+             } else {
+                 // Formular zurücksetzen und auf der aktuellen Seite bleiben
+                 resetForm();
+                 loadExistingGeoInfo();
+             }
          }
 
                  function resetForm() {
