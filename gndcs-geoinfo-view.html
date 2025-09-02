@@ -23,7 +23,7 @@
         .header {
             background: #2c5aa0;
             color: white;
-            padding: 1rem 0;
+            padding: 0.75rem 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -33,7 +33,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 2rem;
+            padding: 0 1rem;
         }
 
         .logo-section {
@@ -42,14 +42,14 @@
         }
 
         .logo-section h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 300;
-            margin-left: 1rem;
+            margin-left: 0.75rem;
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background: #fff;
             border-radius: 4px;
             display: flex;
@@ -85,8 +85,8 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: #28a745;
             border-radius: 50%;
             display: flex;
@@ -99,20 +99,20 @@
         .breadcrumb-bar {
             background: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
-            padding: 0.75rem 0;
+            padding: 0.5rem 0;
         }
 
         .breadcrumb-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1rem;
         }
 
         .nav-breadcrumb {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+            gap: 0.4rem;
+            font-size: 0.85rem;
             color: #666;
         }
 
@@ -128,34 +128,34 @@
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
         }
 
         .page-header {
             background: white;
-            padding: 2rem;
+            padding: 1rem 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .page-header h2 {
             color: #2c5aa0;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 300;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .page-header p {
             color: #666;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .geo-info-container {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             overflow: hidden;
         }
 
@@ -169,63 +169,70 @@
 
         .section-header {
             background: #f8f9fa;
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1rem;
             border-bottom: 1px solid #e9ecef;
         }
 
         .section-title {
             color: #2c5aa0;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .section-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: #2c5aa0;
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .section-content {
-            padding: 1.5rem;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .info-item {
-            background: #f8f9fa;
             padding: 1rem;
-            border-radius: 6px;
-            border-left: 4px solid #2c5aa0;
         }
 
-        .info-label {
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+
+        .info-table th,
+        .info-table td {
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+
+        .info-table th {
+            background: #f8f9fa;
             font-weight: bold;
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            color: #2c5aa0;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            width: 30%;
         }
 
-        .info-value {
+        .info-table td {
             color: #333;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            background: white;
         }
 
-        .info-value.empty {
+        .info-table tr:hover td {
+            background: #f8f9fa;
+        }
+
+        .info-table .empty-value {
             color: #999;
             font-style: italic;
         }
@@ -233,42 +240,35 @@
         .entity-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .entity-item {
             background: #e3f2fd;
             border: 1px solid #2196f3;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
+            border-radius: 16px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.85rem;
             color: #1976d2;
         }
 
         .entity-item .entity-type {
             background: #2196f3;
             color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            margin-right: 0.5rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            margin-right: 0.4rem;
         }
 
-        .coordinate-display {
-            font-family: monospace;
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
-            margin-top: 1rem;
-        }
+
 
         .map-container {
             border: 1px solid #e9ecef;
             border-radius: 8px;
             overflow: hidden;
-            height: 500px;
-            margin-top: 1rem;
+            height: 350px;
+            margin-top: 0.75rem;
         }
 
         #map {
@@ -278,17 +278,17 @@
 
         .action-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             justify-content: center;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         .btn {
-            padding: 0.75rem 2rem;
+            padding: 0.6rem 1.5rem;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s;
@@ -329,9 +329,9 @@
 
         .status-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 16px;
+            font-size: 0.75rem;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -351,17 +351,17 @@
 
         .loading {
             text-align: center;
-            padding: 3rem;
+            padding: 2rem;
             color: #666;
         }
 
         .error {
             background: #f8d7da;
             color: #721c24;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: 6px;
             border: 1px solid #f5c6cb;
-            margin: 1rem 0;
+            margin: 0.75rem 0;
         }
 
         .hidden {
@@ -462,19 +462,20 @@
                     </div>
                 </div>
                 <div class="section-content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Koordinatentyp</div>
-                            <div class="info-value" id="coordinate-type">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Relationstyp</div>
-                            <div class="info-value" id="relation-type">-</div>
-                        </div>
-                    </div>
-                    <div class="coordinate-display" id="coordinate-display">
-                        <!-- Koordinaten werden hier angezeigt -->
-                    </div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Koordinatentyp</th>
+                            <td id="coordinate-type">-</td>
+                        </tr>
+                        <tr>
+                            <th>Relationstyp</th>
+                            <td id="relation-type">-</td>
+                        </tr>
+                        <tr>
+                            <th>Koordinaten</th>
+                            <td id="coordinate-display">-</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -502,20 +503,20 @@
                     </div>
                 </div>
                 <div class="section-content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Anfangsdatum</div>
-                            <div class="info-value" id="start-date">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Enddatum</div>
-                            <div class="info-value" id="end-date">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Verbale Datierung</div>
-                            <div class="info-value" id="verbal-dating">-</div>
-                        </div>
-                    </div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Anfangsdatum</th>
+                            <td id="start-date">-</td>
+                        </tr>
+                        <tr>
+                            <th>Enddatum</th>
+                            <td id="end-date">-</td>
+                        </tr>
+                        <tr>
+                            <th>Verbale Datierung</th>
+                            <td id="verbal-dating">-</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -528,16 +529,16 @@
                     </div>
                 </div>
                 <div class="section-content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Quelle</div>
-                            <div class="info-value" id="source">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Bemerkungen</div>
-                            <div class="info-value" id="remarks">-</div>
-                        </div>
-                    </div>
+                    <table class="info-table">
+                        <tr>
+                            <th>Quelle</th>
+                            <td id="source">-</td>
+                        </tr>
+                        <tr>
+                            <th>Bemerkungen</th>
+                            <td id="remarks">-</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -550,30 +551,30 @@
                     </div>
                 </div>
                 <div class="section-content">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Erstellungsdatum</div>
-                            <div class="info-value" id="created-date">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Änderungsdatum</div>
-                            <div class="info-value" id="modified-date">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Erstellender Bearbeiter</div>
-                            <div class="info-value" id="created-by">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Letzter Bearbeiter</div>
-                            <div class="info-value" id="modified-by">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Status</div>
-                            <div class="info-value">
+                    <table class="info-table">
+                        <tr>
+                            <th>Erstellungsdatum</th>
+                            <td id="created-date">-</td>
+                        </tr>
+                        <tr>
+                            <th>Änderungsdatum</th>
+                            <td id="modified-date">-</td>
+                        </tr>
+                        <tr>
+                            <th>Erstellender Bearbeiter</th>
+                            <td id="created-by">-</td>
+                        </tr>
+                        <tr>
+                            <th>Letzter Bearbeiter</th>
+                            <td id="modified-by">-</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
                                 <span class="status-badge status-active" id="status">Aktiv</span>
-                            </div>
-                        </div>
-                    </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -776,17 +777,17 @@
 
             // Koordinaten anzeigen
             document.getElementById('coordinate-type').textContent = getCoordinateTypeName(geoInfo.coordinateType);
-            document.getElementById('relation-type').textContent = geoInfo.relationType || '-';
+            updateCellValue('relation-type', geoInfo.relationType);
             displayCoordinates(geoInfo);
 
             // Datierung anzeigen
-            document.getElementById('start-date').textContent = formatDate(geoInfo.startDate);
-            document.getElementById('end-date').textContent = formatDate(geoInfo.endDate);
-            document.getElementById('verbal-dating').textContent = geoInfo.verbalDating || '-';
+            updateCellValue('start-date', formatDate(geoInfo.startDate));
+            updateCellValue('end-date', formatDate(geoInfo.endDate));
+            updateCellValue('verbal-dating', geoInfo.verbalDating);
 
             // Zusatzinformationen anzeigen
-            document.getElementById('source').textContent = geoInfo.source || '-';
-            document.getElementById('remarks').textContent = geoInfo.remarks || '-';
+            updateCellValue('source', geoInfo.source);
+            updateCellValue('remarks', geoInfo.remarks);
 
             // Metadaten anzeigen
             document.getElementById('created-date').textContent = formatDateTime(geoInfo.createdDate);
@@ -837,7 +838,7 @@
                     coordinateText = 'Koordinaten nicht verfügbar';
             }
 
-            container.textContent = coordinateText;
+            container.innerHTML = `<span style="font-family: monospace; background: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #e9ecef;">${coordinateText}</span>`;
         }
 
         function getCoordinateTypeName(type) {
@@ -867,6 +868,17 @@
                 return date.toLocaleString('de-DE');
             } catch (e) {
                 return dateTimeString;
+            }
+        }
+
+        function updateCellValue(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (value && value !== '-') {
+                element.textContent = value;
+                element.className = '';
+            } else {
+                element.textContent = '-';
+                element.className = 'empty-value';
             }
         }
 
