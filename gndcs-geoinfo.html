@@ -1429,6 +1429,11 @@
             const container = button.parentElement.parentElement;
             if (container.children.length > 1) {
                 button.parentElement.remove();
+                
+                // Karte nach dem Entfernen des Punktes aktualisieren
+                setTimeout(() => {
+                    updateMapFromForm();
+                }, 100);
             }
         }
 
@@ -1660,6 +1665,25 @@
 
          function addLinePointFromMap(lat, lng) {
              const container = document.getElementById('line-points');
+             
+             // Zuerst prüfen, ob leere Eingabefelder vorhanden sind
+             const emptyInputs = container.querySelectorAll('.point-input input[type="number"]:not([value])');
+             
+             if (emptyInputs.length >= 2) {
+                 // Leere Felder füllen (immer 2 Felder pro Punkt: lat und lon)
+                 for (let i = 0; i < emptyInputs.length; i += 2) {
+                     if (i + 1 < emptyInputs.length) {
+                         // Prüfen, ob dieser Punkt noch leer ist
+                         if (!emptyInputs[i].value && !emptyInputs[i + 1].value) {
+                             emptyInputs[i].value = lat.toFixed(6);
+                             emptyInputs[i + 1].value = lng.toFixed(6);
+                             return; // Punkt gefüllt, Funktion beenden
+                         }
+                     }
+                 }
+             }
+             
+             // Neuen Punkt hinzufügen, wenn keine leeren Felder gefunden wurden
              const pointDiv = document.createElement('div');
              pointDiv.className = 'point-input';
              pointDiv.innerHTML = `
@@ -1674,6 +1698,25 @@
 
          function addPolygonPointFromMap(lat, lng) {
              const container = document.getElementById('polygon-points');
+             
+             // Zuerst prüfen, ob leere Eingabefelder vorhanden sind
+             const emptyInputs = container.querySelectorAll('.point-input input[type="number"]:not([value])');
+             
+             if (emptyInputs.length >= 2) {
+                 // Leere Felder füllen (immer 2 Felder pro Punkt: lat und lon)
+                 for (let i = 0; i < emptyInputs.length; i += 2) {
+                     if (i + 1 < emptyInputs.length) {
+                         // Prüfen, ob dieser Punkt noch leer ist
+                         if (!emptyInputs[i].value && !emptyInputs[i + 1].value) {
+                             emptyInputs[i].value = lat.toFixed(6);
+                             emptyInputs[i + 1].value = lng.toFixed(6);
+                             return; // Punkt gefüllt, Funktion beenden
+                         }
+                     }
+                 }
+             }
+             
+             // Neuen Punkt hinzufügen, wenn keine leeren Felder gefunden wurden
              const pointDiv = document.createElement('div');
              pointDiv.className = 'point-input';
              pointDiv.innerHTML = `
