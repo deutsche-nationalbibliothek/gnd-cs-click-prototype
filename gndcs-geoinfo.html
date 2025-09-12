@@ -468,6 +468,18 @@
             width: auto;
         }
 
+        .info-icon {
+            margin-left: 0.5rem;
+            cursor: help;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .info-icon:hover {
+            opacity: 1;
+        }
+
         .geo-list {
             background: white;
             padding: 2rem;
@@ -933,6 +945,8 @@
                             <div class="approximate-checkbox">
                                 <input type="checkbox" id="start-approximate">
                                 <label for="start-approximate">Ungefähre Angabe</label>
+                                <span class="info-icon"
+                                      title="Bei einer ungefähren Angabe geben Sie bitte im Datumsfeld das früheste Datum der Zeitspanne ein. Beispiel: 01.01.1801 für '19. Jahrhundert'">ℹ️</span>
                             </div>
                         </div>
                         <div class="date-group">
@@ -943,6 +957,8 @@
                             <div class="approximate-checkbox">
                                 <input type="checkbox" id="end-approximate">
                                 <label for="end-approximate">Ungefähre Angabe</label>
+                                <span class="info-icon"
+                                      title="Bei einer ungefähren Angabe geben Sie bitte im Datumsfeld das späteste Datum der Zeitspanne ein. Beispiel: 31.12.1900 für '19. Jahrhundert'">ℹ️</span>
                             </div>
                         </div>
                     </div>
