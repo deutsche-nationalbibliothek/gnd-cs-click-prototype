@@ -480,6 +480,18 @@
             opacity: 1;
         }
 
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         .geo-list {
             background: white;
             padding: 2rem;
@@ -724,6 +736,7 @@
                         <label>GND-Entitäten hinzufügen</label>
                         <div class="search-input-group">
                             <div class="input-group">
+                                <label for="add-entity-search" class="sr-only">GND-Nummer oder Name eingeben</label>
                                 <input type="text" id="add-entity-search" placeholder="GND-Nummer oder Name eingeben">
                             </div>
                             <button class="btn btn-primary" onclick="searchAndAddEntity()">Hinzufügen</button>
@@ -766,8 +779,10 @@
                          <!-- Punktkoordinaten -->
                          <div id="point-coordinates" class="hidden">
                              <div class="coordinate-input">
+                                 <label for="point-lat" class="sr-only">Breitengrad</label>
                                  <input type="number" id="point-lat" step="any" placeholder="Breitengrad">
                                  <span>°N</span>
+                                 <label for="point-lon" class="sr-only">Längengrad</label>
                                  <input type="number" id="point-lon" step="any" placeholder="Längengrad">
                                  <span>°E</span>
                              </div>
@@ -780,16 +795,20 @@
                                  <label>Linienpunkte (mindestens 2 Punkte)</label>
                                  <div class="polygon-points" id="line-points">
                                      <div class="point-input">
-                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <label for="line-point-1-lat" class="sr-only">Breitengrad Linienpunkt 1</label>
+                                         <input type="number" id="line-point-1-lat" step="any" placeholder="Breitengrad">
                                          <span>°N</span>
-                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <label for="line-point-1-lon" class="sr-only">Längengrad Linienpunkt 1</label>
+                                         <input type="number" id="line-point-1-lon" step="any" placeholder="Längengrad">
                                          <span>°E</span>
                                          <button onclick="removePoint(this)">Entfernen</button>
                                      </div>
                                      <div class="point-input">
-                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <label for="line-point-2-lat" class="sr-only">Breitengrad Linienpunkt 2</label>
+                                         <input type="number" id="line-point-2-lat" step="any" placeholder="Breitengrad">
                                          <span>°N</span>
-                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <label for="line-point-2-lon" class="sr-only">Längengrad Linienpunkt 2</label>
+                                         <input type="number" id="line-point-2-lon" step="any" placeholder="Längengrad">
                                          <span>°E</span>
                                          <button onclick="removePoint(this)">Entfernen</button>
                                      </div>
@@ -805,23 +824,29 @@
                                  <label>Polygonpunkte (mindestens 3 Punkte)</label>
                                  <div class="polygon-points" id="polygon-points">
                                      <div class="point-input">
-                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <label for="polygon-point-1-lat" class="sr-only">Breitengrad Polygonpunkt 1</label>
+                                         <input type="number" id="polygon-point-1-lat" step="any" placeholder="Breitengrad">
                                          <span>°N</span>
-                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <label for="polygon-point-1-lon" class="sr-only">Längengrad Polygonpunkt 1</label>
+                                         <input type="number" id="polygon-point-1-lon" step="any" placeholder="Längengrad">
                                          <span>°E</span>
                                          <button onclick="removePoint(this)">Entfernen</button>
                                      </div>
                                      <div class="point-input">
-                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <label for="polygon-point-2-lat" class="sr-only">Breitengrad Polygonpunkt 2</label>
+                                         <input type="number" id="polygon-point-2-lat" step="any" placeholder="Breitengrad">
                                          <span>°N</span>
-                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <label for="polygon-point-2-lon" class="sr-only">Längengrad Polygonpunkt 2</label>
+                                         <input type="number" id="polygon-point-2-lon" step="any" placeholder="Längengrad">
                                          <span>°E</span>
                                          <button onclick="removePoint(this)">Entfernen</button>
                                      </div>
                                      <div class="point-input">
-                                         <input type="number" step="any" placeholder="Breitengrad">
+                                         <label for="polygon-point-3-lat" class="sr-only">Breitengrad Polygonpunkt 3</label>
+                                         <input type="number" id="polygon-point-3-lat" step="any" placeholder="Breitengrad">
                                          <span>°N</span>
-                                         <input type="number" step="any" placeholder="Längengrad">
+                                         <label for="polygon-point-3-lon" class="sr-only">Längengrad Polygonpunkt 3</label>
+                                         <input type="number" id="polygon-point-3-lon" step="any" placeholder="Längengrad">
                                          <span>°E</span>
                                          <button onclick="removePoint(this)">Entfernen</button>
                                      </div>
@@ -835,21 +860,21 @@
                          <div id="bbox-coordinates" class="hidden">
                              <div class="form-row">
                                  <div class="input-group">
-                                     <label>Nordgrenze</label>
+                                     <label for="bbox-north">Nordgrenze</label>
                                      <input type="number" id="bbox-north" step="any" placeholder="Breitengrad">
                                  </div>
                                  <div class="input-group">
-                                     <label>Ostgrenze</label>
+                                     <label for="bbox-east">Ostgrenze</label>
                                      <input type="number" id="bbox-east" step="any" placeholder="Längengrad">
                                  </div>
                              </div>
                              <div class="form-row">
                                  <div class="input-group">
-                                     <label>Südgrenze</label>
+                                     <label for="bbox-south">Südgrenze</label>
                                      <input type="number" id="bbox-south" step="any" placeholder="Breitengrad">
                                  </div>
                                  <div class="input-group">
-                                     <label>Westgrenze</label>
+                                     <label for="bbox-west">Westgrenze</label>
                                      <input type="number" id="bbox-west" step="any" placeholder="Längengrad">
                                  </div>
                              </div>
@@ -899,7 +924,8 @@
                           </div>
                           <div class="help-text">
                               <strong>Anleitung:</strong><br>
-                              • Klicken Sie auf das Polygonsymbol auf der Karte um Koordinaten durch Klicken zu setzen<br>
+                              • Klicken Sie auf das Polygonsymbol auf der Karte, um Koordinaten durch Klicken zu
+                              setzen<br>
                               • Ziehen Sie die Marker mit der Maus, um sie zu verschieben<br>
                               • Verwenden Sie die "Entfernen"-Buttons in der strukturierten Eingabe zum Löschen von Koordinaten<br>
                               • Die Karte zeigt automatisch die eingegebenen Koordinaten an
@@ -1422,10 +1448,13 @@
             const container = document.getElementById(containerId);
             const pointDiv = document.createElement('div');
             pointDiv.className = 'point-input';
+            const pointIndex = container.children.length + 1;
             pointDiv.innerHTML = `
-                <input type="number" step="any" placeholder="Breitengrad">
+                <label for="point-${containerId}-${pointIndex}-lat" class="sr-only">Breitengrad Punkt ${pointIndex}</label>
+                <input type="number" id="point-${containerId}-${pointIndex}-lat" step="any" placeholder="Breitengrad">
                 <span>°N</span>
-                <input type="number" step="any" placeholder="Längengrad">
+                <label for="point-${containerId}-${pointIndex}-lon" class="sr-only">Längengrad Punkt ${pointIndex}</label>
+                <input type="number" id="point-${containerId}-${pointIndex}-lon" step="any" placeholder="Längengrad">
                 <span>°E</span>
                 <button onclick="removePoint(this)">Entfernen</button>
             `;
@@ -1693,10 +1722,13 @@
              // Neuen Punkt hinzufügen, wenn keine leeren Felder gefunden wurden
              const pointDiv = document.createElement('div');
              pointDiv.className = 'point-input';
+             const pointIndex = container.children.length + 1;
              pointDiv.innerHTML = `
-                 <input type="number" step="any" value="${lat.toFixed(6)}" placeholder="Breitengrad">
+                 <label for="point-line-${pointIndex}-lat" class="sr-only">Breitengrad Linienpunkt ${pointIndex}</label>
+                 <input type="number" id="point-line-${pointIndex}-lat" step="any" value="${lat.toFixed(6)}" placeholder="Breitengrad">
                  <span>°N</span>
-                 <input type="number" step="any" value="${lng.toFixed(6)}" placeholder="Längengrad">
+                 <label for="point-line-${pointIndex}-lon" class="sr-only">Längengrad Linienpunkt ${pointIndex}</label>
+                 <input type="number" id="point-line-${pointIndex}-lon" step="any" value="${lng.toFixed(6)}" placeholder="Längengrad">
                  <span>°E</span>
                  <button onclick="removePoint(this)">Entfernen</button>
              `;
@@ -1726,10 +1758,13 @@
              // Neuen Punkt hinzufügen, wenn keine leeren Felder gefunden wurden
              const pointDiv = document.createElement('div');
              pointDiv.className = 'point-input';
+             const pointIndex = container.children.length + 1;
              pointDiv.innerHTML = `
-                 <input type="number" step="any" value="${lat.toFixed(6)}" placeholder="Breitengrad">
+                 <label for="point-polygon-${pointIndex}-lat" class="sr-only">Breitengrad Polygonpunkt ${pointIndex}</label>
+                 <input type="number" id="point-polygon-${pointIndex}-lat" step="any" value="${lat.toFixed(6)}" placeholder="Breitengrad">
                  <span>°N</span>
-                 <input type="number" step="any" value="${lng.toFixed(6)}" placeholder="Längengrad">
+                 <label for="point-polygon-${pointIndex}-lon" class="sr-only">Längengrad Polygonpunkt ${pointIndex}</label>
+                 <input type="number" id="point-polygon-${pointIndex}-lon" step="any" value="${lng.toFixed(6)}" placeholder="Längengrad">
                  <span>°E</span>
                  <button onclick="removePoint(this)">Entfernen</button>
              `;
