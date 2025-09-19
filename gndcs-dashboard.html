@@ -4,508 +4,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - GND Community Space</title>
+    <link rel="shortcut icon" type="image/png" href="resources/images/gnd-favicon.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="gnd-template.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f8f9fa;
-        }
-
-        .header {
-            background: #2c5aa0;
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-section h1 {
-            font-size: 1.8rem;
-            font-weight: 300;
-            margin-left: 1rem;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: #fff;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #2c5aa0;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-section a {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-        }
-
-        .breadcrumb-bar {
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            padding: 0.75rem 0;
-        }
-
-        .breadcrumb-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .nav-breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .nav-breadcrumb a {
-            color: #2c5aa0;
-            text-decoration: none;
-        }
-
-        .nav-breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: #28a745;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .btn {
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 1px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: #2c5aa0;
-        }
-
-        .btn-primary {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #218838;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #2c5aa0;
-            border: 2px solid #2c5aa0;
-        }
-
-        .btn-outline:hover {
-            background: #2c5aa0;
-            color: white;
-        }
-
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .welcome-section {
-            background: linear-gradient(135deg, #2c5aa0, #3d6bb0);
-            color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            margin-bottom: 3rem;
-        }
-
-        .welcome-section h2 {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-section p {
-            opacity: 0.9;
-        }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .action-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            text-align: center;
-        }
-
-        .action-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .action-icon {
-            width: 60px;
-            height: 60px;
-            background: #2c5aa0;
-            border-radius: 50%;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin: 0 auto 1rem auto;
-        }
-
-        .action-card h3 {
-            color: #2c5aa0;
-            margin-bottom: 1rem;
-        }
-
-        .action-card p {
-            color: #666;
-            margin-bottom: 1.5rem;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-        }
-
-        .my-activities, .my-stats {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .section-title {
-            color: #2c5aa0;
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-        }
-
-        .activity-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-weight: bold;
-            margin-bottom: 0.25rem;
-        }
-
-        .activity-meta {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .activity-status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-approved {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-review {
-            background: #cce5ff;
-            color: #004085;
-        }
-
-        .stat-item {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2c5aa0;
-            display: block;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .quick-actions {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-
-        .quick-actions h3 {
-            color: #2c5aa0;
-            margin-bottom: 1rem;
-        }
-
-        .quick-actions .btn {
-            margin-right: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .search-bar {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .search-input:focus {
-            border-color: #2c5aa0;
-            outline: none;
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .action-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        /* Zusätzliche spezifische Styles für diese Seite */
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <a href="gndcs-dashboard.html">
-                    <div class="logo">GND</div>
-                </a>
-                <h1>Community Space</h1>
-            </div>
-            <div class="user-section">
-                <div class="user-info">
-                    <div class="user-avatar">MS</div>
-                    <span>Maria Schmidt</span>
+    <div class="all-content-container">
+        <div class="header">
+            <div class="navbar-container">
+                <div class="language-row">
+                    <div class="language-item">
+                        <a href="#" class="selected-language">DE</a>
+                    </div>
+                    <div class="language-item">
+                        <a href="#" class="unselected-language">EN</a>
+                    </div>
                 </div>
-                <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+                <div class="nav-row">
+                    <div class="navbar-brand">
+                        <img src="resources/images/GND_RGB_Wabe.svg" height="60px" alt="GND Logo">
+                        Community Space
+                    </div>
+                    <div class="user-section">
+                        <div class="user-info">
+                            <div class="user-avatar">MS</div>
+                            <span>Maria Schmidt</span>
+                        </div>
+                        <div class="auth-section">
+                            <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </header>
 
-    <div class="breadcrumb-bar">
-        <div class="breadcrumb-content">
-            <div class="nav-breadcrumb">
-                <a href="gndcs-welcome.html">Start</a>
-                <span>•</span>
-                <span>Dashboard</span>
+        <div class="breadcrumb-bar">
+            <div class="breadcrumb-content">
+                <div class="nav-breadcrumb">
+                    <a href="gndcs-welcome.html">Start</a>
+                    <span>•</span>
+                    <span>Dashboard</span>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-container">
+            <section class="welcome-section">
+                <h2>Willkommen zurück, Maria!</h2>
+                <p>Sie haben 3 neue Benachrichtigungen und 2 Beiträge warten auf Ihre Bearbeitung.</p>
+            </section>
+
+            <section class="action-grid">
+                <div class="action-card">
+                    <div class="action-icon">+</div>
+                    <h3>Neue Entität anlegen</h3>
+                    <p>Erstellen Sie einen Vorschlag für eine neue GND-Entität im Inkubator-Bereich.</p>
+                    <button class="btn btn-primary" onclick="goToIncubator()">Entität vorschlagen</button>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">✎</div>
+                    <h3>Entität ergänzen & korrigieren</h3>
+                    <p>Verbessern Sie bestehende GND-Entitäten durch Feedback und Anreicherungen.</p>
+                    <button class="btn btn-outline" onclick="goToEdit()">Entität bearbeiten</button>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="my-activities">
+                    <h3 class="section-title">Meine aktuellen Aktivitäten</h3>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">Digital Humanities Institute Munich</div>
+                            <div class="activity-meta">Neue Entität vorgeschlagen • vor 2 Stunden</div>
+                        </div>
+                        <span class="activity-status status-pending">Ausstehend</span>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">Goethe, Johann Wolfgang von</div>
+                            <div class="activity-meta">Biografische Daten ergänzt • gestern</div>
+                        </div>
+                        <span class="activity-status status-approved">Genehmigt</span>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">Machine Learning in Medicine</div>
+                            <div class="activity-meta">Sachgebiet vorgeschlagen • vor 3 Tagen</div>
+                        </div>
+                        <span class="activity-status status-review">In Prüfung</span>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">Bach, Johann Sebastian</div>
+                            <div class="activity-meta">Lebensdaten korrigiert • vor 1 Woche</div>
+                        </div>
+                        <span class="activity-status status-approved">Genehmigt</span>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="activity-title">Künstliche Intelligenz Symposium 2024</div>
+                            <div class="activity-meta">Veranstaltung vorgeschlagen • vor 2 Wochen</div>
+                        </div>
+                        <span class="activity-status status-approved">Genehmigt</span>
+                    </div>
+                </div>
+
+                <div class="my-stats">
+                    <h3 class="section-title">Meine Statistiken</h3>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">23</span>
+                        <div class="stat-label">Vorgeschlagene Entitäten</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">67</span>
+                        <div class="stat-label">Verbesserungen eingereicht</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">15</span>
+                        <div class="stat-label">Entitäten in GND überführt</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-number">92%</span>
+                        <div class="stat-label">Annahmequote</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="footer">
+            <div class="footer-row">
+                <div class="footer-col">
+                    <a href="#" class="footer-link">Kontakt</a>
+                </div>
+                <div class="footer-col">
+                    <a href="#" class="footer-link">Impressum</a>
+                </div>
+                <div class="footer-col">
+                    <a href="#" class="footer-link">Datenschutz</a>
+                </div>
+                <div class="footer-col">
+                    <a href="#" class="footer-link">Barrierefreiheit</a>
+                </div>
+                <div class="footer-col">
+                    <a href="#" class="footer-link">Über uns</a>
+                </div>
             </div>
         </div>
     </div>
-
-    <main class="main-container">
-        <section class="welcome-section">
-            <h2>Willkommen zurück, Maria!</h2>
-            <p>Sie haben 3 neue Benachrichtigungen und 2 Beiträge warten auf Ihre Bearbeitung.</p>
-        </section>
-
-        <section class="search-bar">
-            <label>
-                <input type="text" class="search-input" placeholder="GND-Entitäten durchsuchen..." />
-            </label>
-        </section>
-
-        <section class="action-grid">
-            <div class="action-card">
-                <div class="action-icon">+</div>
-                <h3>Neue Entität anlegen</h3>
-                <p>Erstellen Sie einen Vorschlag für eine neue GND-Entität im Inkubator-Bereich.</p>
-                <button class="btn btn-primary" onclick="goToIncubator()">Entität vorschlagen</button>
-            </div>
-            
-            <div class="action-card">
-                <div class="action-icon">✎</div>
-                <h3>Entität ergänzen & korrigieren</h3>
-                <p>Verbessern Sie bestehende GND-Entitäten durch Feedback und Anreicherungen.</p>
-                <button class="btn btn-outline" onclick="goToEdit()">Entität bearbeiten</button>
-            </div>
-        </section>
-
-        <section class="dashboard-grid">
-            <div class="my-activities">
-                <h3 class="section-title">Meine aktuellen Aktivitäten</h3>
-                
-                <div class="activity-item">
-                    <div class="activity-content">
-                        <div class="activity-title">Digital Humanities Institute Munich</div>
-                        <div class="activity-meta">Neue Entität vorgeschlagen • vor 2 Stunden</div>
-                    </div>
-                    <span class="activity-status status-pending">Ausstehend</span>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-content">
-                        <div class="activity-title">Goethe, Johann Wolfgang von</div>
-                        <div class="activity-meta">Biografische Daten ergänzt • gestern</div>
-                    </div>
-                    <span class="activity-status status-approved">Genehmigt</span>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-content">
-                        <div class="activity-title">Machine Learning in Medicine</div>
-                        <div class="activity-meta">Sachgebiet vorgeschlagen • vor 3 Tagen</div>
-                    </div>
-                    <span class="activity-status status-review">In Prüfung</span>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-content">
-                        <div class="activity-title">Bach, Johann Sebastian</div>
-                        <div class="activity-meta">Lebensdaten korrigiert • vor 1 Woche</div>
-                    </div>
-                    <span class="activity-status status-approved">Genehmigt</span>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-content">
-                        <div class="activity-title">Künstliche Intelligenz Symposium 2024</div>
-                        <div class="activity-meta">Veranstaltung vorgeschlagen • vor 2 Wochen</div>
-                    </div>
-                    <span class="activity-status status-approved">Genehmigt</span>
-                </div>
-            </div>
-
-            <div class="my-stats">
-                <h3 class="section-title">Meine Statistiken</h3>
-                
-                <div class="stat-item">
-                    <span class="stat-number">23</span>
-                    <div class="stat-label">Vorgeschlagene Entitäten</div>
-                </div>
-                
-                <div class="stat-item">
-                    <span class="stat-number">67</span>
-                    <div class="stat-label">Verbesserungen eingereicht</div>
-                </div>
-                
-                <div class="stat-item">
-                    <span class="stat-number">15</span>
-                    <div class="stat-label">Entitäten in GND überführt</div>
-                </div>
-                
-                <div class="stat-item">
-                    <span class="stat-number">92%</span>
-                    <div class="stat-label">Annahmequote</div>
-                </div>
-
-                <div class="quick-actions">
-                    <h3>Schnellzugriff</h3>
-                    <button class="btn btn-secondary" onclick="viewNotifications()">Benachrichtigungen</button>
-                    <button class="btn btn-secondary" onclick="viewDrafts()">Entwürfe</button>
-                    <button class="btn btn-secondary" onclick="viewProfile()">Profil</button>
-                </div>
-            </div>
-        </section>
-    </main>
 
     <script>
         function logout() {
@@ -538,7 +196,7 @@
         // Suchfunktion
         document.querySelector('.search-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                alert('Suche nach: "' + this.value + '" würde hier ausgeführt werden.');
+                alert('Suche nach: ' + this.value + ' würde hier ausgeführt werden.');
             }
         });
     </script>

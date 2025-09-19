@@ -4,189 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entität ergänzen & korrigieren - GND Community Space</title>
+    <link rel="shortcut icon" type="image/png" href="resources/images/gnd-favicon.png"/>
+    <link rel="stylesheet" href="gnd-template.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Zusätzliche spezifische Styles für diese Seite */
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f8f9fa;
-        }
 
-        .header {
-            background: #2c5aa0;
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-section h1 {
-            font-size: 1.8rem;
-            font-weight: 300;
-            margin-left: 1rem;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: #fff;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #2c5aa0;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-section a {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: #28a745;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .breadcrumb-bar {
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            padding: 0.75rem 0;
-        }
-
-        .breadcrumb-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .nav-breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .nav-breadcrumb a {
-            color: #2c5aa0;
-            text-decoration: none;
-        }
-
-        .nav-breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .btn {
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 1px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: #2c5aa0;
-        }
-
-        .btn-primary {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #218838;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #2c5aa0;
-            border: 2px solid #2c5aa0;
-        }
-
-        .btn-outline:hover {
-            background: #2c5aa0;
-            color: white;
-        }
-
-        .btn-icon {
-            padding: 0.5rem;
-            min-width: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-explorer {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-explorer:hover {
-            background: #138496;
-        }
-
-        .main-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
 
         .page-header {
             background: white;
@@ -444,33 +269,42 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <a href="gndcs-dashboard.html">
-                    <div class="logo">GND</div>
-                </a>
-                <h1>Community Space</h1>
-            </div>
-            <div class="user-section">
-                <div class="user-info">
-                    <div class="user-avatar">MS</div>
-                    <span>Maria Schmidt</span>
+    <div class="all-content-container">
+        <div class="header">
+            <div class="navbar-container">
+                <div class="language-row">
+                    <div class="language-item">
+                        <a href="#" class="selected-language">DE</a>
+                    </div>
+                    <div class="language-item">
+                        <a href="#" class="unselected-language">EN</a>
+                    </div>
                 </div>
-                <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+                <div class="nav-row">
+                    <div class="navbar-brand">
+                        <img src="resources/images/GND_RGB_Wabe.svg" height="60px" alt="GND Logo">
+                        Community Space
+                    </div>
+                    <div class="user-section">
+                        <div class="user-info">
+                            <div class="user-avatar">MS</div>
+                            <span>Maria Schmidt</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </header>
 
-    <div class="breadcrumb-bar">
-        <div class="breadcrumb-content">
-            <div class="nav-breadcrumb">
-                <a href="#" onclick="goToDashboard()">Dashboard</a>
-                <span>•</span>
-                <span>Entität ergänzen & korrigieren</span>
+        <div class="breadcrumb-bar">
+            <div class="breadcrumb-content">
+                <div class="nav-breadcrumb">
+                    <a href="#" onclick="goToDashboard()">Dashboard</a>
+                    <span>•</span>
+                    <span>Entität ergänzen & korrigieren</span>
+                </div>
             </div>
         </div>
-    </div>
 
     <main class="main-container">
         <section class="page-header">
@@ -575,7 +409,28 @@
                 </div>
             </div>
         </section>
-    </main>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-row">
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Kontakt</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Impressum</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Datenschutz</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Barrierefreiheit</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Über uns</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script>
         let currentEntity = null;

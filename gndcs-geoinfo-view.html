@@ -4,132 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geoinformation anzeigen - GND Community Space</title>
+    <link rel="shortcut icon" type="image/png" href="resources/images/gnd-favicon.png"/>
+    <link rel="stylesheet" href="gnd-template.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Zusätzliche spezifische Styles für diese Seite */
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f8f9fa;
-        }
 
-        .header {
-            background: #2c5aa0;
-            color: white;
-            padding: 0.75rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-section h1 {
-            font-size: 1.5rem;
-            font-weight: 300;
-            margin-left: 0.75rem;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            background: #fff;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #2c5aa0;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo-section a {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            background: #28a745;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .breadcrumb-bar {
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            padding: 0.5rem 0;
-        }
-
-        .breadcrumb-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .nav-breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .nav-breadcrumb a {
-            color: #2c5aa0;
-            text-decoration: none;
-        }
-
-        .nav-breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
 
         .page-header {
             background: white;
@@ -283,49 +166,6 @@
             margin-top: 1rem;
         }
 
-        .btn {
-            padding: 0.6rem 1.5rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: #2c5aa0;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1e3f6b;
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #2c5aa0;
-            border: 2px solid #2c5aa0;
-        }
-
-        .btn-outline:hover {
-            background: #2c5aa0;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #545b62;
-            transform: translateY(-2px);
-        }
 
         .status-badge {
             display: inline-block;
@@ -386,37 +226,46 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <a href="gndcs-welcome.html">
-                    <div class="logo">GND</div>
-                    <h1>Community Space</h1>
-                </a>
-            </div>
-            <div class="user-section">
-                <div class="user-info">
-                    <div class="user-avatar">MS</div>
-                    <span>Maria Schmidt</span>
+    <div class="all-content-container">
+        <div class="header">
+            <div class="navbar-container">
+                <div class="language-row">
+                    <div class="language-item">
+                        <a href="#" class="selected-language">DE</a>
+                    </div>
+                    <div class="language-item">
+                        <a href="#" class="unselected-language">EN</a>
+                    </div>
                 </div>
-                <a href="#" class="btn btn-secondary">Abmelden</a>
+                <div class="nav-row">
+                    <div class="navbar-brand">
+                        <img src="resources/images/GND_RGB_Wabe.svg" height="60px" alt="GND Logo">
+                        Community Space
+                    </div>
+                    <div class="user-section">
+                        <div class="user-info">
+                            <div class="user-avatar">MS</div>
+                            <span>Maria Schmidt</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="logout()">Abmelden</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </header>
 
-    <nav class="breadcrumb-bar">
-        <div class="breadcrumb-content">
-            <div class="nav-breadcrumb">
-                <a href="gndcs-welcome.html">Startseite</a>
-                <span>›</span>
-                <a href="gndcs-dashboard.html">Dashboard</a>
-                <span>›</span>
-                <a href="gndcs-edit.html">Entität bearbeiten</a>
-                <span>›</span>
-                <span>Geoinformation anzeigen</span>
+        <div class="breadcrumb-bar">
+            <div class="breadcrumb-content">
+                <div class="nav-breadcrumb">
+                    <a href="gndcs-welcome.html">Startseite</a>
+                    <span>›</span>
+                    <a href="gndcs-dashboard.html">Dashboard</a>
+                    <span>›</span>
+                    <a href="gndcs-edit.html">Entität bearbeiten</a>
+                    <span>›</span>
+                    <span>Geoinformation anzeigen</span>
+                </div>
             </div>
         </div>
-    </nav>
 
     <main class="main-container">
         <div class="page-header">
@@ -437,7 +286,7 @@
         </div>
 
         <!-- Geo Information Container -->
-        <div id="geo-info-container" class="geo-info-container hidden">
+        <div id="geo-info-container" class="geo-info-container">
             <!-- GND-Entitäten -->
             <div class="info-section">
                 <div class="section-header">
@@ -587,7 +436,28 @@
                 </div>
             </div>
         </div>
-    </main>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-row">
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Kontakt</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Impressum</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Datenschutz</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Barrierefreiheit</a>
+                </div>
+                <div class="footer-col">
+                    <a class="footer-link" target="_blank" href="#">Über uns</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script>
         // Map-Variablen
@@ -698,14 +568,53 @@
             if (geoId) {
                 loadGeoInfo(geoId);
             } else {
-                showError('Keine Geo-ID in der URL gefunden.');
+                // Fallback: Lade Beispieldaten wenn keine ID vorhanden
+                loadGeoInfo('geo-001');
             }
+            
+            // Section-Toggle-Funktionalität initialisieren
+            initSectionToggles();
         });
 
         function getGeoIdFromUrl() {
             // URL-Parameter auslesen
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id');
+            let geoId = urlParams.get('id');
+            
+            // Fallback für file:// URLs
+            if (!geoId && window.location.href.includes('?')) {
+                const urlParts = window.location.href.split('?');
+                if (urlParts.length > 1) {
+                    const params = urlParts[1];
+                    const idMatch = params.match(/id=([^&]+)/);
+                    if (idMatch) {
+                        geoId = idMatch[1];
+                    }
+                }
+            }
+            
+            return geoId;
+        }
+
+        function initSectionToggles() {
+            // Alle Section-Header finden und Click-Handler hinzufügen
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            
+            sectionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const sectionContent = this.nextElementSibling;
+                    if (sectionContent && sectionContent.classList.contains('section-content')) {
+                        // Toggle active class
+                        sectionContent.classList.toggle('active');
+                        
+                        // Optional: Pfeil-Icon drehen
+                        const arrow = this.querySelector('.section-arrow');
+                        if (arrow) {
+                            arrow.classList.toggle('rotated');
+                        }
+                    }
+                });
+            });
         }
 
                  function loadGeoInfo(geoId) {
@@ -714,7 +623,7 @@
                  let geoInfo = geoInfoDatabase[geoId];
                  
                  // Falls die ID nicht in der Datenbank existiert, generiere eine neue Geoinformation
-                 if (!geoInfo && geoId.startsWith('geo-')) {
+                 if (!geoInfo) {
                      geoInfo = generateNewGeoInfo(geoId);
                  }
                  
@@ -771,6 +680,12 @@
             
             // Container anzeigen
             document.getElementById('geo-info-container').classList.remove('hidden');
+
+            // Alle Sections standardmäßig öffnen
+            const sectionContents = document.querySelectorAll('.section-content');
+            sectionContents.forEach(content => {
+                content.classList.add('active');
+            });
 
             // Entitäten anzeigen
             displayEntities(geoInfo.entities);
